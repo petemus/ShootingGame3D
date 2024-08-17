@@ -34,5 +34,6 @@ public:
 	// staticmesh
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* meshComp;
-
+	UPROPERTY(EditAnywhere)
+	class UArrowComponent* arrowComp;
 };
