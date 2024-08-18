@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Enemy.h"
-#include "NormalEnemy.generated.h"
+#include "PatrolEnemy.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SHOOTINGGAME3D_API ANormalEnemy : public AEnemy
+class SHOOTINGGAME3D_API APatrolEnemy : public AEnemy
 {
 	GENERATED_BODY()
 public:
-	ANormalEnemy();
+	APatrolEnemy();
 
 public:
 	virtual void BeginPlay() override;

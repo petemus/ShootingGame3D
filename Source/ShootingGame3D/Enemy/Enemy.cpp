@@ -37,7 +37,7 @@ void AEnemy::Tick(float DeltaTime)
 
 }
 
-void AEnemy::Attack_Implementation()
+void AEnemy::Attack()
 {
 
 }

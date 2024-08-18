@@ -20,7 +20,7 @@ void ANormalEnemy::Tick(float DeltaTime)
 	Move(DeltaTime);
 }
 
-void ANormalEnemy::Attack_Implementation()
+void ANormalEnemy::Attack()
 {
 }
 
@@ -41,11 +41,11 @@ void ANormalEnemy::Move(float DeltaTime)
 	FVector PlayerToMe = (Player->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 	PlayerToMe = PlayerToMe * DeltaTime * MoveSpeed;
 
-	FVector NewPosition = PlayerToMe + GetActorLocation();
+	FVector NewPosition = FVector((PlayerToMe + GetActorLocation()).X, (PlayerToMe + GetActorLocation()).Y, GetActorLocation().Z);
 
 	SetActorLocation(NewPosition);
 
-	FRotator Rot = PlayerToMe.Rotation();
+	FRotator Rot = FRotator(GetActorRotation().Pitch, PlayerToMe.Rotation().Yaw, GetActorRotation().Roll);
 	FQuat Dir = Rot.Quaternion();
 
 	SetActorRotation(Dir);

@@ -53,9 +53,8 @@ protected:
 
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void Attack();
-	virtual void Attack_Implementation();
+	UFUNCTION(BlueprintCallable)
+	virtual void Attack();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Move(float DeltaTime);
