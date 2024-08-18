@@ -30,12 +30,12 @@ public:
 public:
 
 	// capsule collider
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UCapsuleComponent* capsuleComp;
 	// staticmesh
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UStaticMeshComponent* meshComp;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* arrowComp;
 
 	// IMC와 IA 바인딩을 위한 변수 선언
