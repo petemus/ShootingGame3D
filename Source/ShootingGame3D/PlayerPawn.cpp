@@ -5,6 +5,10 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
+
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -31,9 +35,22 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	// 입력 subsystem imc 파일에 mapping
 
+	APlayerController* pc = GetWorld()->GetFirstPlayerController();
 
+	// 유효성 확인
+	if (pc != nullptr)
+	{
+		UEnhancedInputLocalPlayerSubsystem* subsys 
+			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc->GetLocalPlayer());
+		if (subsys != nullptr)
+		{
+			// 입력 subsystem에 imc 파일 변수 연결
+			subsys->AddMappingContext(imc_playerInput, 0);
+		}
+
+	}
 	
 }
 
@@ -45,9 +62,37 @@ void APlayerPawn::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
+// BeginPlay() 실행 전 한번 실행 
+// UInputComponent : unreal4 이하에 사용
+// UEnhancedInputComponent : 5버전 사용 
 void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+
+	UEnhancedInputComponent* enhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	if (enhancedInputComponent != nullptr)
+	{
+		enhancedInputComponent->BindAction(ia_move, ETriggerEvent::Triggered, this, &APlayerPawn::Move);
+	}
 }
+
+void APlayerPawn::Move(const FInputActionValue& value)
+{
+
+	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); 사용 고려
+
+	FVector2D moveVec = value.Get<FVector2D>();
+
+	// 방향 벡터 구하기
+	FVector dir = FVector(moveVec.X, moveVec.Y, 0);
+	dir.Normalize();
+
+	// 등속 이동 
+	FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
+	SetActorLocation(newLocation);
+}
+
+
 
