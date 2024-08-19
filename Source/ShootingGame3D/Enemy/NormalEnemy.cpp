@@ -20,9 +20,6 @@ void ANormalEnemy::Tick(float DeltaTime)
 	Move(DeltaTime);
 }
 
-void ANormalEnemy::Attack()
-{
-}
 
 void ANormalEnemy::Move(float DeltaTime)
 {

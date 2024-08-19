@@ -19,10 +19,6 @@ void APatrolEnemy::Tick(float DeltaTime)
     Move(DeltaTime);
 }
 
-void APatrolEnemy::Attack()
-{
-
-}
 
 void APatrolEnemy::Move(float DeltaTime)
 {

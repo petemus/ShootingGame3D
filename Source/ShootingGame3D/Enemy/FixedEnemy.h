@@ -4,24 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "Enemy.h"
-#include "NormalEnemy.generated.h"
+#include "FixedEnemy.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SHOOTINGGAME3D_API ANormalEnemy : public AEnemy
+class SHOOTINGGAME3D_API AFixedEnemy : public AEnemy
 {
 	GENERATED_BODY()
+	
 public:
-	ANormalEnemy();
 
-public:
+protected:
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+public:
+	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-public:
 
+public:
 	virtual void Move(float DeltaTime) override;
+
+
+
 };

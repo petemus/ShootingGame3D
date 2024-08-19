@@ -37,10 +37,6 @@ void AEnemy::Tick(float DeltaTime)
 
 }
 
-void AEnemy::Attack()
-{
-
-}
 
 void AEnemy::Move(float DeltaTime)
 {

@@ -2,7 +2,7 @@
 
 
 #include "EnemyBullet.h"
-
+#include "GameFramework/Pawn.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -23,6 +23,9 @@ void AEnemyBullet::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APawn* Player = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+	TargetObj = Player;
 }
 
 // Called every frame
@@ -30,16 +33,12 @@ void AEnemyBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 }
 
 void AEnemyBullet::Move(float Delta)
 {
-	FVector CurrentForward = GetActorForwardVector().GetSafeNormal();
-	CurrentForward = CurrentForward * MoveSpeed * Delta;
-
-	FVector NextLocation = CurrentForward + GetActorLocation();
-
-	SetActorLocation(NextLocation);
+	
 }
 
 void AEnemyBullet::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

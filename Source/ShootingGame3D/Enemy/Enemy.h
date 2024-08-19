@@ -40,6 +40,9 @@ public:
 	int32 AttackStat;
 
 	UPROPERTY(BlueprintReadWrite)
+	int32 BulletAttackStat;
+
+	UPROPERTY(BlueprintReadWrite)
 	float AttackDuration;
 
 	UPROPERTY(EditAnywhere)
@@ -53,8 +56,8 @@ protected:
 
 
 public:
-	UFUNCTION(BlueprintCallable)
-	virtual void Attack();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void Attack();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Move(float DeltaTime);

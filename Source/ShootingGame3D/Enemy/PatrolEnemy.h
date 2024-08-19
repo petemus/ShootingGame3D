@@ -23,7 +23,5 @@ public:
 
 public:
 
-	virtual void Attack() override;
-
 	virtual void Move(float DeltaTime) override;
 };

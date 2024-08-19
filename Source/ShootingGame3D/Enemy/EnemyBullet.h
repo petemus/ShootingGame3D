@@ -32,12 +32,18 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float MoveSpeed;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 Damage;
+
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* CapsuleCol;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	AActor* TargetObj;
+
 public:
 	UFUNCTION(BlueprintCallable)
-	void Move(float Delta);
+	virtual void Move(float Delta);
 
 	UFUNCTION(BlueprintCallable)
 	void OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp,
@@ -47,5 +53,7 @@ public:
 		bool bFromSweep,
 		const FHitResult& SweepResult);
 
+	UFUNCTION(BlueprintCallable)
+	void SetDamage(int32 NewDamage) { Damage = NewDamage; }
 
 };
