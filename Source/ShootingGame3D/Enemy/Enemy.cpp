@@ -4,7 +4,9 @@
 #include "Enemy.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "../PlayerPawn.h"
 #include "TimerManager.h"
 
 // Sets default values
@@ -47,10 +49,14 @@ void AEnemy::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 {
 	if (OtherActor && OtherActor != this)
 	{
-		ACharacter* Player = Cast< ACharacter>(OtherActor);
-		if (Player)
+		APawn* Player = Cast< APawn>(OtherActor);
+
+		if (!Player) return;
+
+		APlayerPawn* PlayerPawn =  Cast<APlayerPawn>(Player);
+		if (PlayerPawn)
 		{
-			OverlapPlayer = Player;
+			OverlapPlayer = PlayerPawn;
 			bIsPlayerOverlap = true;
 
 			ApplyDamageToPlayer(OtherActor);
@@ -82,7 +88,15 @@ void AEnemy::OnCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void AEnemy::ApplyDamageToPlayer(AActor* Player)
 {
-	UGameplayStatics::ApplyDamage(Player, AttackStat, nullptr, this, nullptr);
+	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(Player);
+
+	if (!PlayerPawn) return;
+
+	IDamagedInterface* DamagedInter = Cast<IDamagedInterface>(PlayerPawn);
+
+	if (!DamagedInter) return;
+
+	DamagedInter->SetDamaged(AttackStat);
 }
 
 void AEnemy::ApplyContinueDamage()
@@ -94,6 +108,16 @@ void AEnemy::ApplyContinueDamage()
 	else
 	{
 		GetWorldTimerManager().ClearTimer(DamageHandle);
+	}
+}
+
+void AEnemy::SetDamaged(int32 Amount)
+{
+	CurrentHealth -= Amount;
+	if (CurrentHealth <= 0)
+	{
+		CurrentHealth = 0;
+		Destroy();
 	}
 }
 

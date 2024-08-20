@@ -8,7 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-
+#include "GameFramework/FloatingPawnMovement.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -28,6 +28,7 @@ APlayerPawn::APlayerPawn()
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("My Arrow Component"));
 	arrowComp->SetupAttachment(meshComp);
 
+	OurMovementComp = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("My Movement Compoment"));
 }
 
 // Called when the game starts or when spawned
@@ -90,8 +91,26 @@ void APlayerPawn::Move(const FInputActionValue& value)
 	dir.Normalize();
 
 	// 등속 이동 
-	FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
-	SetActorLocation(newLocation);
+	//FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
+	//SetActorLocation(newLocation);
+	float Scalar = moveSpeed * GetWorld()->GetDeltaSeconds();
+	AddMovementInput(dir, Scalar);
+}
+
+void APlayerPawn::SetDamaged(int32 Amount)
+{
+	Health -= Amount;
+
+	UE_LOG(LogTemp, Warning, TEXT("PlayerDamaged"));
+
+	if (Health <= 0)
+	{
+		Health = 0;
+
+		// TODO GameOver
+	}
+
+
 }
 
 

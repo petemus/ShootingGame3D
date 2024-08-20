@@ -22,6 +22,19 @@ private:
 	int32 Gold;
 
 public:
+	UPROPERTY(BlueprintReadWrite)
+	int32 Health;
+
+	UPROPERTY(BlueprintReadWrite)
+	int32 Attack;
+
+	UPROPERTY(BlueprintReadWrite)
+	float AttackDur;
+
+	UPROPERTY(BlueprintReadWrite)
+	float MoveSpeed;
+
+public:
 	/* Gold Used Func */
 	UFUNCTION(BlueprintCallable)
 	void AddGold(int32 Amount);
@@ -29,7 +42,18 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool SpendGold(int32 Amount);
+	
+	UFUNCTION(BlueprintCallable)
+	void IncreaseHealth();
+	
+	UFUNCTION(BlueprintCallable)
+	void IncreaseAttack();	
+	
+	UFUNCTION(BlueprintCallable)
+	void IncreaseAttackDur();
 
+	UFUNCTION(BlueprintCallable)
+	void IncreaseSpeed();
 public:
 	/* Get Set */
 	UFUNCTION(BlueprintCallable)
