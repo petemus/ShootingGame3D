@@ -38,6 +38,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* arrowComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UFloatingPawnMovement* OurMovementComp;
+
 	// IMC와 IA 바인딩을 위한 변수 선언
 	// IMC
 	UPROPERTY(EditAnywhere)
