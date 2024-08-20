@@ -5,6 +5,8 @@
 #include "Components/Button.h"
 #include "ShootingGame3D/ShootingGameLogic/StartGameMode.h"
 #include "StartWidget.h"
+#include "Engine/GameInstance.h"
+#include "../ShootingGameLogic/ShootingGameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void UShopWidget::NativeConstruct()
@@ -19,14 +21,36 @@ void UShopWidget::NativeConstruct()
 
 void UShopWidget::AttackIncrease()
 {
+	UGameInstance* GameIns = GetGameInstance();
+	if (!GameIns) return;
+
+	UShootingGameInstance* ShootingGameIns = Cast<UShootingGameInstance>(GameIns);
+	if (!ShootingGameIns) return;
+
+	ShootingGameIns->IncreaseAttack();
+
 }
 
 void UShopWidget::MoveIncrease()
 {
+	UGameInstance* GameIns = GetGameInstance();
+	if (!GameIns) return;
+
+	UShootingGameInstance* ShootingGameIns = Cast<UShootingGameInstance>(GameIns);
+	if (!ShootingGameIns) return;
+
+	ShootingGameIns->IncreaseSpeed();
 }
 
 void UShopWidget::AttackDurationDecrease()
 {
+	UGameInstance* GameIns = GetGameInstance();
+	if (!GameIns) return;
+
+	UShootingGameInstance* ShootingGameIns = Cast<UShootingGameInstance>(GameIns);
+	if (!ShootingGameIns) return;
+
+	ShootingGameIns->IncreaseAttackDur();
 }
 
 void UShopWidget::Quit()

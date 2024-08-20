@@ -2,7 +2,9 @@
 
 
 #include "EnemyBullet.h"
+#include "../PlayerPawn.h"
 #include "GameFramework/Pawn.h"
+#include "../Public/DamagedInterface.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -12,7 +14,7 @@ AEnemyBullet::AEnemyBullet()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CapsuleCol = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleCol"));
-	CapsuleCol->SetupAttachment(RootComponent);
+	SetRootComponent(CapsuleCol);
 
 	CapsuleCol->OnComponentBeginOverlap.AddDynamic(this, &AEnemyBullet::OnCapsuleOverlap);
 
@@ -43,8 +45,27 @@ void AEnemyBullet::Move(float Delta)
 
 void AEnemyBullet::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// TODO
+	
+	if (OtherActor && (OtherActor != this) && (OtherComp->GetCollisionObjectType() == ECC_WorldStatic))
+	{
+		Destroy();
+	}
 
+	APawn* Player = Cast<APawn>(OtherActor);
+	if (!Player) return;
+
+	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(Player);
+
+	if (!PlayerPawn) return;
+
+	IDamagedInterface* DamagedInter = Cast<IDamagedInterface>(PlayerPawn);
+
+	if (DamagedInter)
+	{
+		DamagedInter->SetDamaged(Damage);
+		Destroy();
+	}
+	
 }
 
 

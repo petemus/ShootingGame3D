@@ -28,7 +28,7 @@ APlayerPawn::APlayerPawn()
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("My Arrow Component"));
 	arrowComp->SetupAttachment(meshComp);
 
-	OurMovementComp = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("My Our Component"));
+	OurMovementComp = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("My Movement Compoment"));
 }
 
 // Called when the game starts or when spawned
@@ -93,8 +93,24 @@ void APlayerPawn::Move(const FInputActionValue& value)
 	// 등속 이동 
 	//FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
 	//SetActorLocation(newLocation);
+	float Scalar = moveSpeed * GetWorld()->GetDeltaSeconds();
+	AddMovementInput(dir, Scalar);
+}
 
-	AddMovementInput(dir, moveSpeed * GetWorld()->GetDeltaSeconds());
+void APlayerPawn::SetDamaged(int32 Amount)
+{
+	Health -= Amount;
+
+	UE_LOG(LogTemp, Warning, TEXT("PlayerDamaged"));
+
+	if (Health <= 0)
+	{
+		Health = 0;
+
+		// TODO GameOver
+	}
+
+
 }
 
 
