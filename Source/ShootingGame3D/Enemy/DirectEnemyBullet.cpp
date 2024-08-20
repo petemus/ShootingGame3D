@@ -7,18 +7,6 @@ void ADirectEnemyBullet::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (TargetObj)
-	{
-		FVector VecToRo = TargetObj->GetActorLocation() - GetActorLocation();
-
-		VecToRo = VecToRo.GetSafeNormal();
-
-		FRotator Rot = VecToRo.Rotation();
-
-		FQuat Qut = Rot.Quaternion();
-
-		SetActorRotation(Qut);
-	}
 }
 
 void ADirectEnemyBullet::Tick(float DeltaTime)
