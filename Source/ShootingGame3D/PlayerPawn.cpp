@@ -112,7 +112,7 @@ void APlayerPawn::SetDamaged(int32 Amount)
 		AShootingGameModeBase* SGameMode = Cast<AShootingGameModeBase>( GetWorld()->GetAuthGameMode());
 		if (SGameMode)
 		{
-			SGameMode->GameOverUI->AddToViewport();
+			SGameMode->GameOverUI->SetVisibility(ESlateVisibility::Visible);
 
 			APlayerController* PController = GetWorld()->GetFirstPlayerController();
 			if (PController)

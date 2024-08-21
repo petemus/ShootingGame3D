@@ -81,7 +81,6 @@ void AEnemy::OnCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		OverlapPlayer = nullptr;
 		if (GetWorldTimerManager().IsTimerActive(DamageHandle))
 		{
-
 			GetWorldTimerManager().ClearTimer(DamageHandle);
 		}
 	}

@@ -14,6 +14,8 @@ void AShootingGameModeBase::BeginPlay()
 		if (GameOverUI != nullptr)
 		{
 			GameOverUI->SetStartMode(this);
+			GameOverUI->AddToViewport();
+			GameOverUI->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }
