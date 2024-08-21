@@ -52,6 +52,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int32 EnemyGold;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsMove;
+
 protected:
 	/* Damage */
 	FTimerHandle DamageHandle;

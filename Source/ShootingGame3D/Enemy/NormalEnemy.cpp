@@ -17,7 +17,10 @@ void ANormalEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Move(DeltaTime);
+	if (bIsMove)
+	{
+		Move(DeltaTime);
+	}
 }
 
 
