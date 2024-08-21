@@ -13,7 +13,6 @@ void UStartWidget::NativeConstruct()
 	Super::NativeConstruct();
 	StartButton->OnClicked.AddDynamic(this, &UStartWidget::Start);
 	ShopButton->OnClicked.AddDynamic(this, &UStartWidget::OpenShop);
-	QuitButton->OnClicked.AddDynamic(this, &UStartWidget::Quit);
 }
 
 void UStartWidget::Start()
@@ -32,10 +31,6 @@ void UStartWidget::OpenShop()
 	RemoveFromParent();
 }
 
-void UStartWidget::Quit()
-{
-	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, false);
-}
 
 void UStartWidget::SetStartMode(AStartGameMode* mode)
 {

@@ -22,16 +22,7 @@ public:
 protected:
 
 public:
-	/* Button */
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UButton* AttackStatButton;
-
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UButton* MoveStatButton;
-
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UButton* AttackDurationButton;
-
+	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* QuitButton;
 
@@ -40,16 +31,6 @@ public:
 	AStartGameMode* StartMode;
 
 public:
-	/* Play Button Func */
-	UFUNCTION()
-	void AttackIncrease();
-
-	UFUNCTION()
-	void MoveIncrease();
-
-	UFUNCTION()
-	void AttackDurationDecrease();
-
 	UFUNCTION()
 	void Quit();
 

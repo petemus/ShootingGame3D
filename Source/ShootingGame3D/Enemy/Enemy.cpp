@@ -7,6 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "../PlayerPawn.h"
+#include "../ShootingGameLogic/ShootingGameInstance.h"
 #include "TimerManager.h"
 
 // Sets default values
@@ -71,7 +72,7 @@ void AEnemy::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 
 void AEnemy::OnCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	ACharacter* Player = Cast<ACharacter>(OtherActor);
+	APawn* Player = Cast<APawn>(OtherActor);
 	if (Player)
 	{
 		bIsPlayerOverlap = false;
@@ -117,6 +118,15 @@ void AEnemy::SetDamaged(int32 Amount)
 	if (CurrentHealth <= 0)
 	{
 		CurrentHealth = 0;
+		UGameInstance* GameIns = GetGameInstance();
+
+		UShootingGameInstance* ShootingGameIns = Cast<UShootingGameInstance>(GameIns);
+
+		if (ShootingGameIns)
+		{
+			ShootingGameIns->AddGold(EnemyGold);
+		}
+
 		Destroy();
 	}
 }

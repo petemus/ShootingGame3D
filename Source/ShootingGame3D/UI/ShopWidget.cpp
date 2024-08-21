@@ -13,45 +13,11 @@ void UShopWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	AttackStatButton->OnClicked.AddDynamic(this, &UShopWidget::AttackIncrease);
-	MoveStatButton->OnClicked.AddDynamic(this, &UShopWidget::MoveIncrease);
-	AttackDurationButton->OnClicked.AddDynamic(this, &UShopWidget::AttackDurationDecrease);
+	
 	QuitButton->OnClicked.AddDynamic(this, &UShopWidget::Quit);
 }
 
-void UShopWidget::AttackIncrease()
-{
-	UGameInstance* GameIns = GetGameInstance();
-	if (!GameIns) return;
 
-	UShootingGameInstance* ShootingGameIns = Cast<UShootingGameInstance>(GameIns);
-	if (!ShootingGameIns) return;
-
-	ShootingGameIns->IncreaseAttack();
-
-}
-
-void UShopWidget::MoveIncrease()
-{
-	UGameInstance* GameIns = GetGameInstance();
-	if (!GameIns) return;
-
-	UShootingGameInstance* ShootingGameIns = Cast<UShootingGameInstance>(GameIns);
-	if (!ShootingGameIns) return;
-
-	ShootingGameIns->IncreaseSpeed();
-}
-
-void UShopWidget::AttackDurationDecrease()
-{
-	UGameInstance* GameIns = GetGameInstance();
-	if (!GameIns) return;
-
-	UShootingGameInstance* ShootingGameIns = Cast<UShootingGameInstance>(GameIns);
-	if (!ShootingGameIns) return;
-
-	ShootingGameIns->IncreaseAttackDur();
-}
 
 void UShopWidget::Quit()
 {

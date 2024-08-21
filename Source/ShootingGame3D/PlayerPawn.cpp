@@ -8,6 +8,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "UI/GameOverWidget.h"
+#include "ShootingGameModeBase.h"
 #include "GameFramework/FloatingPawnMovement.h"
 
 // Sets default values
@@ -101,16 +103,25 @@ void APlayerPawn::SetDamaged(int32 Amount)
 {
 	Health -= Amount;
 
-	UE_LOG(LogTemp, Warning, TEXT("PlayerDamaged"));
 
 	if (Health <= 0)
 	{
 		Health = 0;
 
 		// TODO GameOver
+		AShootingGameModeBase* SGameMode = Cast<AShootingGameModeBase>( GetWorld()->GetAuthGameMode());
+		if (SGameMode)
+		{
+			SGameMode->GameOverUI->AddToViewport();
+
+			APlayerController* PController = GetWorld()->GetFirstPlayerController();
+			if (PController)
+			{
+				PController->bShowMouseCursor = true;
+				PController->bEnableClickEvents = true;
+			}
+		}
 	}
-
-
 }
 
 

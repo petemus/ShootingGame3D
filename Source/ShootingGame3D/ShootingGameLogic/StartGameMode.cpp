@@ -28,6 +28,7 @@ void AStartGameMode::BeginPlay()
 			ShopUI->SetStartMode(this);
 		}
 	}
+	
 	ShowMouse();
 }
 
