@@ -68,8 +68,9 @@ public:
 private:
 	// 입력이 들어올때 호출되는 이벤트 함수
 	void Move(const struct FInputActionValue& value);
-
+	
 public:
+	UFUNCTION(BlueprintCallable)
 	virtual void SetDamaged(int32 Amount) override;
 
 };

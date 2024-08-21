@@ -73,8 +73,10 @@ void AEnemy::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 void AEnemy::OnCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	APawn* Player = Cast<APawn>(OtherActor);
+	UE_LOG(LogTemp, Warning, TEXT("EndOver"));
 	if (Player)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("false, nullptr"));
 		bIsPlayerOverlap = false;
 		OverlapPlayer = nullptr;
 		if (GetWorldTimerManager().IsTimerActive(DamageHandle))
