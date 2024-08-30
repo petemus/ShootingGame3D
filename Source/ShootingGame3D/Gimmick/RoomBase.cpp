@@ -29,6 +29,75 @@ void ARoomBase::Tick(float DeltaTime)
 
 }
 
+void ARoomBase::InitRoom(uint8 OpenDirFlag)
+{
+	// 연결된 Map 구조에 따라 초기화
+	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_LEFT)) SetDoor(EOpenDir::EOD_LEFT);
+	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_RIGHT)) SetDoor(EOpenDir::EOD_RIGHT);
+	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_UP)) SetDoor(EOpenDir::EOD_UP);
+	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_DOWN)) SetDoor(EOpenDir::EOD_DOWN);
+
+	// 활성화된 모든 문 열기
+	OpenDoor();
+}
+
+void ARoomBase::SetDoor(EOpenDir OpenDir)
+{
+	switch (OpenDir)
+	{
+	case EOpenDir::EOD_LEFT:
+		Left_Door->SetVisibility(true);
+		Left_Wall->SetVisibility(false);
+		Left_Wall->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		break;
+
+	case EOpenDir::EOD_RIGHT:
+		Right_Door->SetVisibility(true);
+		Right_Wall->SetVisibility(false);
+		Right_Wall->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		break;
+
+	case EOpenDir::EOD_UP:
+		Up_Door->SetVisibility(true);
+		Up_Wall->SetVisibility(false);
+		Up_Wall->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		break;
+
+	case EOpenDir::EOD_DOWN:
+		Down_Door->SetVisibility(true);
+		Down_Wall->SetVisibility(false);
+		Down_Wall->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		break;
+	}
+}
+
+void ARoomBase::OpenDoor()
+{
+	if (Left_Door->IsVisible())
+	{
+		FVector NewLocation = Left_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
+		Left_Door->SetRelativeLocation(NewLocation);
+	}
+
+	if (Right_Door->IsVisible())
+	{
+		FVector NewLocation = Right_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
+		Right_Door->SetRelativeLocation(NewLocation);
+	}
+
+	if (Up_Door->IsVisible())
+	{
+		FVector NewLocation = Up_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
+		Up_Door->SetRelativeLocation(NewLocation);
+	}
+
+	if (Down_Door->IsVisible())
+	{
+		FVector NewLocation = Down_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
+		Down_Door->SetRelativeLocation(NewLocation);
+	}
+}
+
 void ARoomBase::CreateMeshComponent()
 {
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
@@ -106,10 +175,10 @@ void ARoomBase::InitRoomTransform()
 	Down_Wall->SetRelativeLocation(FVector(-2000.0f, 0.0f, 850.0f));
 	Down_Wall->SetRelativeScale3D(FVector(1.0f, 8.0f, 18.0f));
 
-	Left_Wall->SetVisibility(false);
-	Right_Wall->SetVisibility(false);
-	Up_Wall->SetVisibility(false);
-	Down_Wall->SetVisibility(false);
+	Left_Wall->SetVisibility(true);
+	Right_Wall->SetVisibility(true);
+	Up_Wall->SetVisibility(true);
+	Down_Wall->SetVisibility(true);
 
 	Left_Door->SetRelativeLocation(FVector(-425.0f, -2000.0f, -50.0f));
 	Left_Door->SetRelativeScale3D(FVector(5.0f, 1.0f, 5.0f));
@@ -142,4 +211,3 @@ void ARoomBase::InitRoomTransform()
 	WallMeshes[7]->SetRelativeLocation(FVector(400.0f, -2000.0f, -40.0f));
 	WallMeshes[7]->SetRelativeScale3D(FVector(4.0f, 1.0f, 3.0f));
 }
-

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "RoomEnums.h"
 #include "RoomBase.generated.h"
 
 UCLASS()
@@ -21,9 +22,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 // Init
+public:
+	void InitRoom(uint8 OpenDirFlag);
+
+// Create
 private:
 	void CreateMeshComponent();
 	void InitRoomTransform();
+	void SetDoor(EOpenDir OpenDir);
+	void OpenDoor();
 
 // Components
 private:
