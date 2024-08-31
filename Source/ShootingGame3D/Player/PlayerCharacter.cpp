@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ // Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "PlayerCharacter.h"
@@ -9,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "../UI/GameOverWidget.h"
 #include "ShootingGameModeBase.h"
+#include "../Bullet/Bullet.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -66,6 +67,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (enhancedInputComponent != nullptr)
 	{
 		enhancedInputComponent->BindAction(ia_move, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+		enhancedInputComponent->BindAction(ia_fire, ETriggerEvent::Completed, this, &APlayerCharacter::Fire);
 	}
 }
 
@@ -86,6 +88,14 @@ void APlayerCharacter::Move(const FInputActionValue& value)
 	
 
 	
+}
+
+void APlayerCharacter::Fire(const FInputActionValue& value)
+{
+	// character의 방향 변경
+
+	// bullet forward 방향으로 spawn
+	GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
 }
 
 void APlayerCharacter::SetDamaged(int32 Amount)

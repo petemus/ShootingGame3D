@@ -39,8 +39,6 @@ public:
 	class UStaticMeshComponent* headMesh;
 	UPROPERTY(EditAnywhere)
 	class UArrowComponent* arrowComp;
-	UPROPERTY(EditAnywhere)
-
 
 	// IMC, IA
 	UPROPERTY(EditAnywhere)
@@ -50,20 +48,27 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UInputAction* ia_fire;
 
+	// Bullet Factory
+	// content browser에서 가져오므로 TSub
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ABullet> bulletFactory;
+
 public:
 	// 일반 변수
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(EditAnywhere)
 	float moveSpeed = 500;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(EditAnywhere)
 	int32 Health;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(EditAnywhere)
 	float SpawnTime;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(EditAnywhere)
 	int32 AttackStat = 1;
 
 private:
 	// 입력이 들어올때 호출되는 이벤트 함수
 	void Move(const struct FInputActionValue& value);
+	// Fire 이벤트 함수
+	void Fire(const struct FInputActionValue& value);
 
 public:
 	UFUNCTION(BlueprintCallable)
