@@ -17,15 +17,14 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Components »ý¼º
-	capsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("My Capsule Component"));
-	SetRootComponent(capsuleComp);
-
-	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("My StaticMesh Component"));
-	meshComp->SetupAttachment(capsuleComp);
-
-	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("My Arrow Component"));
-	arrowComp->SetupAttachment(meshComp);
-
+	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh Component"));
+	meshComp->SetupAttachment(RootComponent);
+	bodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body StaticMesh"));
+	bodyMesh->SetupAttachment(meshComp);
+	headMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Head StaticMesh"));
+	headMesh->SetupAttachment(meshComp);
+	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
+	arrowComp->SetupAttachment(RootComponent);
 
 }
 

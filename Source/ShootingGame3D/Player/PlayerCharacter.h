@@ -30,12 +30,18 @@ public:
 
 public:
 	// Components
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCapsuleComponent* capsuleComp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// Character는 capsule, skeletal mesh, arrow comp를 기본으로 가지고 있음
+	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* meshComp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere)
+	class UStaticMeshComponent* bodyMesh;
+	UPROPERTY(EditAnywhere)
+	class UStaticMeshComponent* headMesh;
+	UPROPERTY(EditAnywhere)
 	class UArrowComponent* arrowComp;
+	UPROPERTY(EditAnywhere)
+
+
 	// IMC, IA
 	UPROPERTY(EditAnywhere)
 	class UInputMappingContext* imc_playerInput;
