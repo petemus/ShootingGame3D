@@ -5,29 +5,19 @@
 #include "Components/Button.h"
 #include "ShootingGame3D/ShootingGameLogic/StartGameMode.h"
 #include "StartWidget.h"
+#include "Engine/GameInstance.h"
+#include "../ShootingGameLogic/ShootingGameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void UShopWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	AttackStatButton->OnClicked.AddDynamic(this, &UShopWidget::AttackIncrease);
-	MoveStatButton->OnClicked.AddDynamic(this, &UShopWidget::MoveIncrease);
-	AttackDurationButton->OnClicked.AddDynamic(this, &UShopWidget::AttackDurationDecrease);
+	
 	QuitButton->OnClicked.AddDynamic(this, &UShopWidget::Quit);
 }
 
-void UShopWidget::AttackIncrease()
-{
-}
 
-void UShopWidget::MoveIncrease()
-{
-}
-
-void UShopWidget::AttackDurationDecrease()
-{
-}
 
 void UShopWidget::Quit()
 {

@@ -29,5 +29,8 @@ public:
 	virtual void Move(float DeltaTime) override;
 
 
+public:
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FVector> FirePoses;
 };

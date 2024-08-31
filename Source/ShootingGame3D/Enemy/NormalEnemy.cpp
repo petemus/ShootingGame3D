@@ -17,7 +17,10 @@ void ANormalEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	Move(DeltaTime);
+	if (bIsMove)
+	{
+		Move(DeltaTime);
+	}
 }
 
 
@@ -31,11 +34,8 @@ void ANormalEnemy::Move(float DeltaTime)
 
 	if (!Pawn) return;
 
-	ACharacter* Player = Cast<ACharacter>(Pawn);
-
-	if (!Player) return;
-
-	FVector PlayerToMe = (Player->GetActorLocation() - GetActorLocation()).GetSafeNormal();
+	
+	FVector PlayerToMe = (Pawn->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 	PlayerToMe = PlayerToMe * DeltaTime * MoveSpeed;
 
 	FVector NewPosition = FVector((PlayerToMe + GetActorLocation()).X, (PlayerToMe + GetActorLocation()).Y, GetActorLocation().Z);

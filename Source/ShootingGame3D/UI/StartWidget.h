@@ -29,9 +29,6 @@ public:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UButton* ShopButton;
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UButton* QuitButton;
-
 	/* Cache */
 	UPROPERTY()
 	AStartGameMode* StartMode;
@@ -44,9 +41,6 @@ public:
 
 	UFUNCTION()
 	void OpenShop();
-
-	UFUNCTION()
-	void Quit();
 
 	/* Get Set */
 	AStartGameMode* GetStartMode() { return StartMode; }

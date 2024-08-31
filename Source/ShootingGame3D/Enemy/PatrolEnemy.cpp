@@ -30,7 +30,7 @@ void APatrolEnemy::Move(float DeltaTime)
 
     SetActorLocation(NextLocation);
 
-    float RotationSpeed = 60.0f;
+    float RotationSpeed = -60.0f;
     FRotator CurrentRotation = GetActorRotation();
     CurrentRotation.Yaw += RotationSpeed * DeltaTime;
 

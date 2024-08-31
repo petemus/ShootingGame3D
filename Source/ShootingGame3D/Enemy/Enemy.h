@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "../Public/DamagedInterface.h"
 #include "Enemy.generated.h"
 
 class UCapsuleComponent;
 class UPrimitiveComponent;
 
 UCLASS(Abstract)
-class SHOOTINGGAME3D_API AEnemy : public AActor
+class SHOOTINGGAME3D_API AEnemy : public AActor, public IDamagedInterface
 {
 	GENERATED_BODY()
 
@@ -48,6 +49,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	UCapsuleComponent* CapsuleCol;
 
+	UPROPERTY(BlueprintReadWrite)
+	int32 EnemyGold;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsMove;
+
 protected:
 	/* Damage */
 	FTimerHandle DamageHandle;
@@ -79,4 +86,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyContinueDamage();
+
+public:
+	/* DamagedInterface */
+	UFUNCTION(BlueprintCallable)
+	virtual void SetDamaged(int32 Amount) override;
 };
