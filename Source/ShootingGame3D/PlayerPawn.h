@@ -32,7 +32,6 @@ public:
 
 public:
 
-	// Components
 	// capsule collider
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UCapsuleComponent* capsuleComp;
@@ -41,6 +40,7 @@ public:
 	class UStaticMeshComponent* meshComp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* arrowComp;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UFloatingPawnMovement* OurMovementComp;
 
