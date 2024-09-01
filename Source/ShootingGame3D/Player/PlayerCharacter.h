@@ -7,6 +7,8 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+class UInputMappingContext;
+
 UCLASS()
 class SHOOTINGGAME3D_API APlayerCharacter : public ACharacter, public IDamagedInterface
 {
@@ -30,28 +32,27 @@ public:
 
 public:
 	// Components
-	// Character는 capsule, skeletal mesh, arrow comp를 기본으로 가지고 있음
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* meshComp;
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* bodyMesh;
+	 UStaticMeshComponent* bodyMesh;
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* headMesh;
+	 UStaticMeshComponent* headMesh;
 	UPROPERTY(EditAnywhere)
 	class UArrowComponent* arrowComp;
-	UPROPERTY(EditAnywhere)
 
 
 	// IMC, IA
 	UPROPERTY(EditAnywhere)
-	class UInputMappingContext* imc_playerInput;
+	UInputMappingContext* imc_playerInput;
+
 	UPROPERTY(EditAnywhere)
 	class UInputAction* ia_move;
+
 	UPROPERTY(EditAnywhere)
-	class UInputAction* ia_fire;
+	 UInputAction* ia_fire;
 
 public:
-	// 일반 변수
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float moveSpeed = 500;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -62,7 +63,6 @@ public:
 	int32 AttackStat = 1;
 
 private:
-	// 입력이 들어올때 호출되는 이벤트 함수
 	void Move(const struct FInputActionValue& value);
 
 public:

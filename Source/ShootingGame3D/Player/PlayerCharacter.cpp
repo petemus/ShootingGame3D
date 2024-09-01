@@ -5,8 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ArrowComponent.h"
-#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 #include "../UI/GameOverWidget.h"
 #include "ShootingGameModeBase.h"
 
@@ -16,7 +16,7 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Components »ý¼º
+	// Components ï¿½ï¿½ï¿½ï¿½
 	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh Component"));
 	meshComp->SetupAttachment(RootComponent);
 	bodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body StaticMesh"));
@@ -25,7 +25,7 @@ APlayerCharacter::APlayerCharacter()
 	headMesh->SetupAttachment(meshComp);
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
 	arrowComp->SetupAttachment(RootComponent);
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -33,16 +33,16 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// pc°¡Á®¿À°í subsystem °¡Á®¿À°í subsys¿¡¼­ imc¿Í ¿¬°á
+	// pcï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ subsystem ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ subsysï¿½ï¿½ï¿½ï¿½ imcï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	APlayerController* pc = GetWorld()->GetFirstPlayerController();
-	// À¯È¿¼º È®ÀÎ
+	// ï¿½ï¿½È¿ï¿½ï¿½ È®ï¿½ï¿½
 	if (pc != nullptr)
 	{
 		UEnhancedInputLocalPlayerSubsystem* subsys
 			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc->GetLocalPlayer());
 		if (subsys != nullptr)
 		{
-			// ÀÔ·Â subsystem¿¡ imc ÆÄÀÏ º¯¼ö ¿¬°á
+			// ï¿½Ô·ï¿½ subsystemï¿½ï¿½ imc ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			subsys->AddMappingContext(imc_playerInput, 0);
 		}
 	}
@@ -61,7 +61,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// imc¿Í ia ¿¬°á
+	// imcï¿½ï¿½ ia ï¿½ï¿½ï¿½ï¿½
 	UEnhancedInputComponent* enhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (enhancedInputComponent != nullptr)
 	{
@@ -71,14 +71,14 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::Move(const FInputActionValue& value)
 {
-	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); »ç¿ë °í·Á
+	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	FVector2D moveVec = value.Get<FVector2D>();
 
-	// ¹æÇâ º¤ÅÍ ±¸ÇÏ±â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½
 	FVector dir = FVector(moveVec.X, moveVec.Y, 0);
 	dir.Normalize();
 
-	// µî¼Ó ÀÌµ¿ 
+	// ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ 
 	//FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
 	//SetActorLocation(newLocation);
 	float Scalar = moveSpeed * GetWorld()->GetDeltaSeconds();
