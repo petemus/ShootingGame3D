@@ -10,6 +10,8 @@
 #include "../UI/GameOverWidget.h"
 #include "ShootingGameModeBase.h"
 #include "../Bullet/Bullet.h"
+//
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -25,7 +27,7 @@ APlayerCharacter::APlayerCharacter()
 	headMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Head StaticMesh"));
 	headMesh->SetupAttachment(meshComp);
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
-	arrowComp->SetupAttachment(RootComponent);
+	arrowComp->SetupAttachment(meshComp);
 
 }
 
@@ -55,6 +57,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// √—æÀ πﬂªÁ Ω√∞£¿ª tickø°º≠ ºº¡÷æÓæﬂ«‘
+	nowTime += GetWorld()->GetDeltaSeconds();
+
 }
 
 // Called to bind functionality to input
@@ -67,7 +72,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (enhancedInputComponent != nullptr)
 	{
 		enhancedInputComponent->BindAction(ia_move, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
-		enhancedInputComponent->BindAction(ia_fire, ETriggerEvent::Completed, this, &APlayerCharacter::Fire);
+		enhancedInputComponent->BindAction(ia_fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 	}
 }
 
@@ -83,7 +88,10 @@ void APlayerCharacter::Move(const FInputActionValue& value)
 	// µÓº” ¿Ãµø 
 	//FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
 	//SetActorLocation(newLocation);
+
 	float Scalar = moveSpeed * GetWorld()->GetDeltaSeconds();
+	// AddMovementInput¿« dir¿∫ worldDirection.. 
+	// ªÛ¥Î πÊ«‚¿∏∑Œ πŸ≤ÓæÓæﬂ«œ¥¬µ•
 	AddMovementInput(dir, Scalar);
 	
 
@@ -92,10 +100,22 @@ void APlayerCharacter::Move(const FInputActionValue& value)
 
 void APlayerCharacter::Fire(const FInputActionValue& value)
 {
-	// character¿« πÊ«‚ ∫Ø∞Ê
+	FVector2D vec = value.Get<FVector2D>();
+	FVector dir = FVector(vec.X, vec.Y, 0);
+	dir.Normalize();
 
+	// character¿« πÊ«‚ ∫Ø∞Ê
+	// Find Look at Rotation -> startø°º≠ Target¿∏∑Œ ∞°∏Æ≈≥ »∏¿¸Øì π›»Ø
+	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + dir);
+	meshComp->SetWorldRotation(rotate);
+	
 	// bullet forward πÊ«‚¿∏∑Œ spawn
-	GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
+	// spawn time µøæ» spawn ∏¯«œ∞‘
+	if (nowTime >= spawnTime)
+	{
+		GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
+		nowTime = 0;
+	}
 }
 
 void APlayerCharacter::SetDamaged(int32 Amount)

@@ -56,7 +56,7 @@ void ABullet::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 			if (player != nullptr)
 			{
 				// 변수에 바로 접근하는 거 별로 안좋은데...
-				enemy->SetDamaged(player->AttackStat);
+				enemy->SetDamaged(player->AttackStat + bulletDamage);
 				Destroy();
 			}
 		}

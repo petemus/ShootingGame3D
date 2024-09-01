@@ -60,9 +60,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 Health;
 	UPROPERTY(EditAnywhere)
-	float SpawnTime;
+	float spawnTime = 0.5;
 	UPROPERTY(EditAnywhere)
 	int32 AttackStat = 1;
+
+private:
+	float nowTime = spawnTime;
 
 private:
 	// 입력이 들어올때 호출되는 이벤트 함수

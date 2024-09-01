@@ -28,6 +28,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 bulletDamage = 0;
 
+
 public:
 	void Move(float DeltaTime);
 
