@@ -10,7 +10,7 @@
 #include "../UI/GameOverWidget.h"
 #include "ShootingGameModeBase.h"
 #include "../Bullet/Bullet.h"
-//
+//#include "../Item/Item.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -26,8 +26,17 @@ APlayerCharacter::APlayerCharacter()
 	bodyMesh->SetupAttachment(meshComp);
 	headMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Head StaticMesh"));
 	headMesh->SetupAttachment(meshComp);
+	
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
 	arrowComp->SetupAttachment(meshComp);
+	leftArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Left Arrow"));
+	leftArrow->SetupAttachment(meshComp);
+	rightArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Arrow"));
+	rightArrow->SetupAttachment(meshComp);
+
+	// collision prest 세팅
+	//UPrimitiveComponent* root = Cast<UPrimitiveComponent>(RootComponent);
+	//if(root != nullptr) root->SetCollisionProfileName(TEXT("Player"));
 
 }
 
@@ -76,6 +85,41 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+
+
+void APlayerCharacter::SetAttackMode(EItemType type)
+{
+	// item type에 따라 attack mode 다르게 설정
+	switch (type)
+	{
+	case EItemType::BlueItem:
+		myAttackMode = EAttackMode::GreatAttack;
+		// 일정 시간 후에 다시 모드 변경
+		// timer로 구현할까, tick으로 구현 할까 
+		break;
+	case EItemType::GreenItem:
+		myAttackMode = EAttackMode::TripleAttack;
+		break;
+	case EItemType::PurpleItem:
+		// 이벤트 호출 
+		break;
+	default:
+		break;
+	}
+
+	// Timer에 대해서 공부 필요
+	// 일정 시간 후로 다시 attack mode 변경 
+	FTimerHandle myTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(myTimerHandle, FTimerDelegate::CreateLambda([&]()
+	{
+		// 내가 원하는 코드 구현
+		myAttackMode = EAttackMode::NormalAttack;
+
+		// 타이머 초기화
+		GetWorld()->GetTimerManager().ClearTimer(myTimerHandle);
+	}), attackTime, false);
+}
+
 void APlayerCharacter::Move(const FInputActionValue& value)
 {
 	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); 사용 고려
@@ -94,6 +138,7 @@ void APlayerCharacter::Move(const FInputActionValue& value)
 	// 상대 방향으로 바뀌어야하는데
 	AddMovementInput(dir, Scalar);
 	
+	
 
 	
 }
@@ -111,11 +156,36 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 	
 	// bullet forward 방향으로 spawn
 	// spawn time 동안 spawn 못하게
-	if (nowTime >= spawnTime)
+	// Attack Mode에 따라 다른 공격
+	switch (myAttackMode)
 	{
-		GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
-		nowTime = 0;
+	case EAttackMode::NormalAttack:
+		if (nowTime >= spawnTime)
+		{
+			GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
+			nowTime = 0;
+		}
+		break;
+	case EAttackMode::GreatAttack:
+		if (nowTime >= spawnTime)
+		{
+			GetWorld()->SpawnActor<ABullet>(bigbulletFactory, arrowComp->GetComponentTransform());
+			nowTime = 0;
+		}
+		break;
+	case EAttackMode::TripleAttack:
+		if (nowTime >= spawnTime)
+		{
+			GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
+			GetWorld()->SpawnActor<ABullet>(bulletFactory, leftArrow->GetComponentTransform());
+			GetWorld()->SpawnActor<ABullet>(bulletFactory, rightArrow->GetComponentTransform());
+			nowTime = 0;
+		}
+		break;
+	default:
+		break;
 	}
+
 }
 
 void APlayerCharacter::SetDamaged(int32 Amount)

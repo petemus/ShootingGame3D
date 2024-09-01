@@ -5,7 +5,20 @@
 #include "../Public/DamagedInterface.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../Item/Item.h"
 #include "PlayerCharacter.generated.h"
+
+UENUM()
+enum class EAttackMode : uint8
+{
+	NormalAttack UMETA(DisplayName = "Normal Attak"),
+	GreatAttack UMETA(DisplayName = "Great Attak"),
+	TripleAttack  UMETA(DisplayName = "Triple Attak")
+};
+
+
+class UStaticMeshComponent;
+class UArrowComponent;
 
 UCLASS()
 class SHOOTINGGAME3D_API APlayerCharacter : public ACharacter, public IDamagedInterface
@@ -32,13 +45,17 @@ public:
 	// Components
 	// Character는 capsule, skeletal mesh, arrow comp를 기본으로 가지고 있음
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* meshComp;
+	UStaticMeshComponent* meshComp;
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* bodyMesh;
+	UStaticMeshComponent* bodyMesh;
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* headMesh;
+	UStaticMeshComponent* headMesh;
 	UPROPERTY(EditAnywhere)
-	class UArrowComponent* arrowComp;
+	UArrowComponent* arrowComp;
+	UPROPERTY(EditAnywhere)
+	UArrowComponent* leftArrow;
+	UPROPERTY(EditAnywhere)
+	UArrowComponent* rightArrow;
 
 	// IMC, IA
 	UPROPERTY(EditAnywhere)
@@ -52,8 +69,9 @@ public:
 	// content browser에서 가져오므로 TSub
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABullet> bulletFactory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ABullet> bigbulletFactory;
 
-public:
 	// 일반 변수
 	UPROPERTY(EditAnywhere)
 	float moveSpeed = 500;
@@ -65,7 +83,17 @@ public:
 	int32 AttackStat = 1;
 
 private:
+	// spawn time 체크 해주는 변수
 	float nowTime = spawnTime;
+	// attack mode 
+	EAttackMode myAttackMode = EAttackMode::NormalAttack;
+	// attack mode 시간 체크
+	float attackTime = 3;
+	float leaveTime = 3;
+
+public:
+	// enum은 전방 선언 못하나????
+	void SetAttackMode(EItemType type);
 
 private:
 	// 입력이 들어올때 호출되는 이벤트 함수
