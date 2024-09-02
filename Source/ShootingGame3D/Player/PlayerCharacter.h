@@ -58,7 +58,7 @@ public:
 
 	// IMC, IA
 	UPROPERTY(EditAnywhere)
-	UInputMappingContext* imc_playerInput;
+	class UInputMappingContext* imc_playerInput;
 
 	UPROPERTY(EditAnywhere)
 	class UInputAction* ia_move;
