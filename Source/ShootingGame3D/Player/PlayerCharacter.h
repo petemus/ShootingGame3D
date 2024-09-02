@@ -30,7 +30,7 @@ public:
 
 public:
 	// Components
-	// Character´Â capsule, skeletal mesh, arrow comp¸¦ ±âº»À¸·Î °¡Áö°í ÀÖÀ½
+	// CharacterëŠ” capsule, skeletal mesh, arrow compë¥¼ ê¸°ë³¸ìœ¼ë¡œ ê°€ì§€ê³  ìˆìŒ
 	UPROPERTY(EditAnywhere)
 	class UStaticMeshComponent* meshComp;
 	UPROPERTY(EditAnywhere)
@@ -39,7 +39,7 @@ public:
 	class UStaticMeshComponent* headMesh;
 	UPROPERTY(EditAnywhere)
 	class UArrowComponent* arrowComp;
-	UPROPERTY(EditAnywhere)
+
 
 
 	// IMC, IA
@@ -51,7 +51,7 @@ public:
 	class UInputAction* ia_fire;
 
 public:
-	// ÀÏ¹İ º¯¼ö
+	// ì¼ë°˜ ë³€ìˆ˜
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float moveSpeed = 500;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -62,7 +62,7 @@ public:
 	int32 AttackStat = 1;
 
 private:
-	// ÀÔ·ÂÀÌ µé¾î¿Ã¶§ È£ÃâµÇ´Â ÀÌº¥Æ® ÇÔ¼ö
+	// ì…ë ¥ì´ ë“¤ì–´ì˜¬ë•Œ í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸ í•¨ìˆ˜
 	void Move(const struct FInputActionValue& value);
 
 public:
