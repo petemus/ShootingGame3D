@@ -26,11 +26,11 @@ void ANormalEnemy::Tick(float DeltaTime)
 
 void ANormalEnemy::Move(float DeltaTime)
 {
-	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 
-	if (!Controller) return;
+	if (!PlayerController) return;
 
-	APawn* Pawn = Controller->GetPawn();
+	APawn* Pawn = PlayerController->GetPawn();
 
 	if (!Pawn) return;
 

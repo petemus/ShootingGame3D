@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "../Public/DamagedInterface.h"
 #include "Enemy.generated.h"
 
@@ -11,7 +11,7 @@ class UCapsuleComponent;
 class UPrimitiveComponent;
 
 UCLASS(Abstract)
-class SHOOTINGGAME3D_API AEnemy : public AActor, public IDamagedInterface
+class SHOOTINGGAME3D_API AEnemy : public APawn, public IDamagedInterface
 {
 	GENERATED_BODY()
 

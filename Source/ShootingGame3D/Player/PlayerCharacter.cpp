@@ -5,8 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/ArrowComponent.h"
-#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 #include "../UI/GameOverWidget.h"
 #include "ShootingGameModeBase.h"
 #include "../Bullet/Bullet.h"
@@ -19,7 +19,7 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Components »ý¼º
+	// Components ï¿½ï¿½ï¿½ï¿½
 	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh Component"));
 	meshComp->SetupAttachment(RootComponent);
 	bodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body StaticMesh"));
@@ -28,13 +28,14 @@ APlayerCharacter::APlayerCharacter()
 	headMesh->SetupAttachment(meshComp);
 	
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
+
 	arrowComp->SetupAttachment(meshComp);
 	leftArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Left Arrow"));
 	leftArrow->SetupAttachment(meshComp);
 	rightArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Arrow"));
 	rightArrow->SetupAttachment(meshComp);
 
-	// collision prest ¼¼ÆÃ
+	// collision prest ï¿½ï¿½ï¿½ï¿½
 	//UPrimitiveComponent* root = Cast<UPrimitiveComponent>(RootComponent);
 	//if(root != nullptr) root->SetCollisionProfileName(TEXT("Player"));
 
@@ -45,16 +46,16 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// pc°¡Á®¿À°í subsystem °¡Á®¿À°í subsys¿¡¼­ imc¿Í ¿¬°á
+	// pcï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ subsystem ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ subsysï¿½ï¿½ï¿½ï¿½ imcï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	APlayerController* pc = GetWorld()->GetFirstPlayerController();
-	// À¯È¿¼º È®ÀÎ
+	// ï¿½ï¿½È¿ï¿½ï¿½ È®ï¿½ï¿½
 	if (pc != nullptr)
 	{
 		UEnhancedInputLocalPlayerSubsystem* subsys
 			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc->GetLocalPlayer());
 		if (subsys != nullptr)
 		{
-			// ÀÔ·Â subsystem¿¡ imc ÆÄÀÏ º¯¼ö ¿¬°á
+			// ï¿½Ô·ï¿½ subsystemï¿½ï¿½ imc ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			subsys->AddMappingContext(imc_playerInput, 0);
 		}
 	}
@@ -66,7 +67,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// ÃÑ¾Ë ¹ß»ç ½Ã°£À» tick¿¡¼­ ¼¼ÁÖ¾î¾ßÇÔ
+	// ï¿½Ñ¾ï¿½ ï¿½ß»ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ tickï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½
 	nowTime += GetWorld()->GetDeltaSeconds();
 
 }
@@ -76,7 +77,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// imc¿Í ia ¿¬°á
+	// imcï¿½ï¿½ ia ï¿½ï¿½ï¿½ï¿½
 	UEnhancedInputComponent* enhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (enhancedInputComponent != nullptr)
 	{
@@ -89,53 +90,53 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::SetAttackMode(EItemType type)
 {
-	// item type¿¡ µû¶ó attack mode ´Ù¸£°Ô ¼³Á¤
+	// item typeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ attack mode ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	switch (type)
 	{
 	case EItemType::BlueItem:
 		myAttackMode = EAttackMode::GreatAttack;
-		// ÀÏÁ¤ ½Ã°£ ÈÄ¿¡ ´Ù½Ã ¸ðµå º¯°æ
-		// timer·Î ±¸ÇöÇÒ±î, tickÀ¸·Î ±¸Çö ÇÒ±î 
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½Ä¿ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// timerï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò±ï¿½, tickï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò±ï¿½ 
 		break;
 	case EItemType::GreenItem:
 		myAttackMode = EAttackMode::TripleAttack;
 		break;
 	case EItemType::PurpleItem:
-		// ÀÌº¥Æ® È£Ãâ 
+		// ï¿½Ìºï¿½Æ® È£ï¿½ï¿½ 
 		break;
 	default:
 		break;
 	}
 
-	// Timer¿¡ ´ëÇØ¼­ °øºÎ ÇÊ¿ä
-	// ÀÏÁ¤ ½Ã°£ ÈÄ·Î ´Ù½Ã attack mode º¯°æ 
+	// Timerï¿½ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½Ä·ï¿½ ï¿½Ù½ï¿½ attack mode ï¿½ï¿½ï¿½ï¿½ 
 	FTimerHandle myTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(myTimerHandle, FTimerDelegate::CreateLambda([&]()
 	{
-		// ³»°¡ ¿øÇÏ´Â ÄÚµå ±¸Çö
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
 		myAttackMode = EAttackMode::NormalAttack;
 
-		// Å¸ÀÌ¸Ó ÃÊ±âÈ­
+		// Å¸ï¿½Ì¸ï¿½ ï¿½Ê±ï¿½È­
 		GetWorld()->GetTimerManager().ClearTimer(myTimerHandle);
 	}), attackTime, false);
 }
 
 void APlayerCharacter::Move(const FInputActionValue& value)
 {
-	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); »ç¿ë °í·Á
+	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	FVector2D moveVec = value.Get<FVector2D>();
 
-	// ¹æÇâ º¤ÅÍ ±¸ÇÏ±â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½
 	FVector dir = FVector(moveVec.X, moveVec.Y, 0);
 	dir.Normalize();
 
-	// µî¼Ó ÀÌµ¿ 
+	// ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ 
 	//FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
 	//SetActorLocation(newLocation);
 
 	float Scalar = moveSpeed * GetWorld()->GetDeltaSeconds();
-	// AddMovementInputÀÇ dirÀº worldDirection.. 
-	// »ó´ë ¹æÇâÀ¸·Î ¹Ù²î¾î¾ßÇÏ´Âµ¥
+	// AddMovementInputï¿½ï¿½ dirï¿½ï¿½ worldDirection.. 
+	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ï¿½Ï´Âµï¿½
 	AddMovementInput(dir, Scalar);
 	
 	
@@ -149,14 +150,14 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 	FVector dir = FVector(vec.X, vec.Y, 0);
 	dir.Normalize();
 
-	// characterÀÇ ¹æÇâ º¯°æ
-	// Find Look at Rotation -> start¿¡¼­ TargetÀ¸·Î °¡¸®Å³ È¸Àü¯“ ¹ÝÈ¯
+	// characterï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// Find Look at Rotation -> startï¿½ï¿½ï¿½ï¿½ Targetï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å³ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + dir);
 	meshComp->SetWorldRotation(rotate);
 	
-	// bullet forward ¹æÇâÀ¸·Î spawn
-	// spawn time µ¿¾È spawn ¸øÇÏ°Ô
-	// Attack Mode¿¡ µû¶ó ´Ù¸¥ °ø°Ý
+	// bullet forward ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ spawn
+	// spawn time ï¿½ï¿½ï¿½ï¿½ spawn ï¿½ï¿½ï¿½Ï°ï¿½
+	// Attack Modeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 	switch (myAttackMode)
 	{
 	case EAttackMode::NormalAttack:

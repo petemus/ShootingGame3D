@@ -43,7 +43,6 @@ public:
 
 public:
 	// Components
-	// Character´Â capsule, skeletal mesh, arrow comp¸¦ ±âº»À¸·Î °¡Áö°í ÀÖÀ½
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* meshComp;
 	UPROPERTY(EditAnywhere)
@@ -59,20 +58,25 @@ public:
 
 	// IMC, IA
 	UPROPERTY(EditAnywhere)
-	class UInputMappingContext* imc_playerInput;
+	UInputMappingContext* imc_playerInput;
+
 	UPROPERTY(EditAnywhere)
 	class UInputAction* ia_move;
+
 	UPROPERTY(EditAnywhere)
-	class UInputAction* ia_fire;
+	 UInputAction* ia_fire;
 
 	// Bullet Factory
-	// content browser¿¡¼­ °¡Á®¿À¹Ç·Î TSub
+	// content browserï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ TSub
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABullet> bulletFactory;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class ABullet> bigbulletFactory;
 
-	// ÀÏ¹Ý º¯¼ö
+	// ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½ï¿½
+
+public:
+	
 	UPROPERTY(EditAnywhere)
 	float moveSpeed = 500;
 	UPROPERTY(EditAnywhere)
@@ -83,22 +87,22 @@ public:
 	int32 AttackStat = 1;
 
 private:
-	// spawn time Ã¼Å© ÇØÁÖ´Â º¯¼ö
+	// spawn time Ã¼Å© ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½
 	float nowTime = spawnTime;
 	// attack mode 
 	EAttackMode myAttackMode = EAttackMode::NormalAttack;
-	// attack mode ½Ã°£ Ã¼Å©
+	// attack mode ï¿½Ã°ï¿½ Ã¼Å©
 	float attackTime = 3;
 	float leaveTime = 3;
 
 public:
-	// enumÀº Àü¹æ ¼±¾ð ¸øÇÏ³ª????
+	// enumï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï³ï¿½????
 	void SetAttackMode(EItemType type);
 
 private:
-	// ÀÔ·ÂÀÌ µé¾î¿Ã¶§ È£ÃâµÇ´Â ÀÌº¥Æ® ÇÔ¼ö
+	// ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¶ï¿½ È£ï¿½ï¿½Ç´ï¿½ ï¿½Ìºï¿½Æ® ï¿½Ô¼ï¿½
 	void Move(const struct FInputActionValue& value);
-	// Fire ÀÌº¥Æ® ÇÔ¼ö
+	// Fire ï¿½Ìºï¿½Æ® ï¿½Ô¼ï¿½
 	void Fire(const struct FInputActionValue& value);
 
 public:

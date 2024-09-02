@@ -21,9 +21,6 @@ void AFixedEnemy::BeginPlay()
 
 		FirePoses.AddUnique(NewPos);
 	}
-
-
-
 }
 
 void AFixedEnemy::Tick(float DeltaTime)
