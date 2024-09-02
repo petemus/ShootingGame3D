@@ -12,6 +12,7 @@ UDungeonGeneratorComponent::UDungeonGeneratorComponent()
 	// Default Value Set
 	Width = 4;
 	Height = 3;
+	RoomSize = 4000.0f;
 }
 
 
@@ -128,7 +129,7 @@ void UDungeonGeneratorComponent::SpawnMaze()
 				// 스폰 위치 구하기
 				FTransform SpawnTransform;
 
-				SpawnTransform.SetLocation(FVector(-4000.0f * y, 4000.0f * x, 0.0f));
+				SpawnTransform.SetLocation(FVector(-RoomSize * y, RoomSize * x, 0.0f));
 
 				// 스폰할 클래스 랜덤으로 구하기
 				int32 RandIdx = FMath::RandRange(0, RoomClassArray.Num() - 1);

@@ -34,6 +34,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Dungeon")
 	int32 Height;
 
+	UPROPERTY(EditAnywhere, Category = "Dungeon")
+	float RoomSize;
+
 	UPROPERTY(VisibleAnywhere, Category = "Dungeon")
 	TArray<FRoomInfo> DungeonMaps;
 
