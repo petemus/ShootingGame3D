@@ -5,7 +5,20 @@
 #include "../Public/DamagedInterface.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../Item/Item.h"
 #include "PlayerCharacter.generated.h"
+
+UENUM()
+enum class EAttackMode : uint8
+{
+	NormalAttack UMETA(DisplayName = "Normal Attak"),
+	GreatAttack UMETA(DisplayName = "Great Attak"),
+	TripleAttack  UMETA(DisplayName = "Triple Attak")
+};
+
+
+class UStaticMeshComponent;
+class UArrowComponent;
 
 UCLASS()
 class SHOOTINGGAME3D_API APlayerCharacter : public ACharacter, public IDamagedInterface
@@ -30,17 +43,19 @@ public:
 
 public:
 	// Components
-	// CharacterëŠ” capsule, skeletal mesh, arrow compë¥¼ ê¸°ë³¸ìœ¼ë¡œ ê°€ì§€ê³  ìˆìŒ
+	// Character´Â capsule, skeletal mesh, arrow comp¸¦ ±âº»À¸·Î °¡Áö°í ÀÖÀ½
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* meshComp;
+	UStaticMeshComponent* meshComp;
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* bodyMesh;
+	UStaticMeshComponent* bodyMesh;
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* headMesh;
+	UStaticMeshComponent* headMesh;
 	UPROPERTY(EditAnywhere)
-	class UArrowComponent* arrowComp;
-
-
+	UArrowComponent* arrowComp;
+	UPROPERTY(EditAnywhere)
+	UArrowComponent* leftArrow;
+	UPROPERTY(EditAnywhere)
+	UArrowComponent* rightArrow;
 
 	// IMC, IA
 	UPROPERTY(EditAnywhere)
@@ -50,20 +65,41 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UInputAction* ia_fire;
 
-public:
-	// ì¼ë°˜ ë³€ìˆ˜
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	// Bullet Factory
+	// content browser¿¡¼­ °¡Á®¿À¹Ç·Î TSub
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ABullet> bulletFactory;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class ABullet> bigbulletFactory;
+
+	// ÀÏ¹İ º¯¼ö
+	UPROPERTY(EditAnywhere)
 	float moveSpeed = 500;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(EditAnywhere)
 	int32 Health;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	float SpawnTime;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(EditAnywhere)
+	float spawnTime = 0.5;
+	UPROPERTY(EditAnywhere)
 	int32 AttackStat = 1;
 
 private:
-	// ì…ë ¥ì´ ë“¤ì–´ì˜¬ë•Œ í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸ í•¨ìˆ˜
+	// spawn time Ã¼Å© ÇØÁÖ´Â º¯¼ö
+	float nowTime = spawnTime;
+	// attack mode 
+	EAttackMode myAttackMode = EAttackMode::NormalAttack;
+	// attack mode ½Ã°£ Ã¼Å©
+	float attackTime = 3;
+	float leaveTime = 3;
+
+public:
+	// enumÀº Àü¹æ ¼±¾ğ ¸øÇÏ³ª????
+	void SetAttackMode(EItemType type);
+
+private:
+	// ÀÔ·ÂÀÌ µé¾î¿Ã¶§ È£ÃâµÇ´Â ÀÌº¥Æ® ÇÔ¼ö
 	void Move(const struct FInputActionValue& value);
+	// Fire ÀÌº¥Æ® ÇÔ¼ö
+	void Fire(const struct FInputActionValue& value);
 
 public:
 	UFUNCTION(BlueprintCallable)
