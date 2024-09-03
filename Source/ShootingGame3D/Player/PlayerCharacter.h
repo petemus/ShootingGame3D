@@ -45,10 +45,10 @@ public:
 	// Components
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* meshComp;
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* bodyMesh;
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* headMesh;
+	//UPROPERTY(EditAnywhere)
+	//UStaticMeshComponent* bodyMesh;
+	//UPROPERTY(EditAnywhere)
+	//UStaticMeshComponent* headMesh;
 	UPROPERTY(EditAnywhere)
 	UArrowComponent* arrowComp;
 	UPROPERTY(EditAnywhere)

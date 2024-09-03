@@ -22,10 +22,10 @@ APlayerCharacter::APlayerCharacter()
 	// Components ����
 	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh Component"));
 	meshComp->SetupAttachment(RootComponent);
-	bodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body StaticMesh"));
-	bodyMesh->SetupAttachment(meshComp);
-	headMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Head StaticMesh"));
-	headMesh->SetupAttachment(meshComp);
+	//bodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body StaticMesh"));
+	//bodyMesh->SetupAttachment(meshComp);
+	//headMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Head StaticMesh"));
+	//headMesh->SetupAttachment(meshComp);
 	
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
 
