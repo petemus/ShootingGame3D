@@ -37,7 +37,7 @@ void AShootingGameModeBase::MiniMapSet(int32 RoomIdx, uint8 OpenFlag)
 	if (HUDWidget)
 	{
 		HUDWidget->SetCurrentRoom(RoomIdx, OpenFlag);
-		HUDWidget->SetHp(5);
+		//HUDWidget->SetHp(5);
 	}
 }
 
