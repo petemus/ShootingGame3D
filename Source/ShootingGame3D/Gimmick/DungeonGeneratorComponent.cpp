@@ -136,7 +136,7 @@ void UDungeonGeneratorComponent::SpawnMaze()
 
 				// 해당 위치에 스폰하기
 				ARoomBase* Room = GetWorld()->SpawnActorDeferred<ARoomBase>(RoomClassArray[RandIdx], SpawnTransform);
-				Room->InitRoom(DungeonMaps[(y * Width) + x].OpenDir);
+				Room->InitRoom(DungeonMaps[(y * Width) + x].OpenDir, DungeonMaps[(y * Width) + x].RoomNum);
 				Room->FinishSpawning(SpawnTransform);
 			}
 		}

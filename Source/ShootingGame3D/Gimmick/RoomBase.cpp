@@ -2,6 +2,8 @@
 
 
 #include "RoomBase.h"
+#include "ShootingGame3D/Player/PlayerCharacter.h"
+#include "ShootingGame3D/Enemy/Enemy.h"
 
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -15,6 +17,12 @@ ARoomBase::ARoomBase()
 
 	// Set Transform
 	InitRoomTransform();
+
+	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ARoomBase::OnComponentBeginOverlap);
+
+	// Member Init
+	CurrentRoomState = ERoomState::RS_None;
+	SpawnCount = 0;
 }
 
 void ARoomBase::BeginPlay()
@@ -29,16 +37,19 @@ void ARoomBase::Tick(float DeltaTime)
 
 }
 
-void ARoomBase::InitRoom(uint8 OpenDirFlag)
+void ARoomBase::InitRoom(uint8 OpenDirFlag, int32 RoomCount)
 {
+	// 현재 방의 넘버 저장
+	RoomNum = RoomCount;
+
 	// 연결된 Map 구조에 따라 초기화
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_LEFT)) SetDoor(EOpenDir::EOD_LEFT);
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_RIGHT)) SetDoor(EOpenDir::EOD_RIGHT);
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_UP)) SetDoor(EOpenDir::EOD_UP);
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_DOWN)) SetDoor(EOpenDir::EOD_DOWN);
 
-	// 활성화된 모든 문 열기
-	OpenDoor();
+	// 초기 상태 변경
+	SetState(ERoomState::RS_Ready);
 }
 
 void ARoomBase::SetDoor(EOpenDir OpenDir)
@@ -71,37 +82,155 @@ void ARoomBase::SetDoor(EOpenDir OpenDir)
 	}
 }
 
-void ARoomBase::OpenDoor()
+void ARoomBase::OpenDoor(bool bIsOpen)
 {
-	if (Left_Door->IsVisible())
+	if (bIsOpen)
 	{
-		FVector NewLocation = Left_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
-		Left_Door->SetRelativeLocation(NewLocation);
-	}
+		if (Left_Door->IsVisible())
+		{
+			FVector NewLocation = Left_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
+			Left_Door->SetRelativeLocation(NewLocation);
+		}
 
-	if (Right_Door->IsVisible())
-	{
-		FVector NewLocation = Right_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
-		Right_Door->SetRelativeLocation(NewLocation);
-	}
+		if (Right_Door->IsVisible())
+		{
+			FVector NewLocation = Right_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
+			Right_Door->SetRelativeLocation(NewLocation);
+		}
 
-	if (Up_Door->IsVisible())
-	{
-		FVector NewLocation = Up_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
-		Up_Door->SetRelativeLocation(NewLocation);
-	}
+		if (Up_Door->IsVisible())
+		{
+			FVector NewLocation = Up_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
+			Up_Door->SetRelativeLocation(NewLocation);
+		}
 
-	if (Down_Door->IsVisible())
-	{
-		FVector NewLocation = Down_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
-		Down_Door->SetRelativeLocation(NewLocation);
+		if (Down_Door->IsVisible())
+		{
+			FVector NewLocation = Down_Door->GetRelativeLocation() - FVector(0.0f, 0.0f, 1800.0f);
+			Down_Door->SetRelativeLocation(NewLocation);
+		}
 	}
+	else
+	{
+		if (Left_Door->IsVisible())
+		{
+			FVector NewLocation = Left_Door->GetRelativeLocation() + FVector(0.0f, 0.0f, 1800.0f);
+			Left_Door->SetRelativeLocation(NewLocation);
+		}
+
+		if (Right_Door->IsVisible())
+		{
+			FVector NewLocation = Right_Door->GetRelativeLocation() + FVector(0.0f, 0.0f, 1800.0f);
+			Right_Door->SetRelativeLocation(NewLocation);
+		}
+
+		if (Up_Door->IsVisible())
+		{
+			FVector NewLocation = Up_Door->GetRelativeLocation() + FVector(0.0f, 0.0f, 1800.0f);
+			Up_Door->SetRelativeLocation(NewLocation);
+		}
+
+		if (Down_Door->IsVisible())
+		{
+			FVector NewLocation = Down_Door->GetRelativeLocation() + FVector(0.0f, 0.0f, 1800.0f);
+			Down_Door->SetRelativeLocation(NewLocation);
+		}
+	}
+}
+
+void ARoomBase::SpawnMonster()
+{
+	UWorld* World = GetWorld();
+	if (!World) return;
+
+	for (int32 i = 0; i < MonsterSpawnInfos.Num(); i++)
+	{
+		FVector SpawnLocation = MonsterSpawnInfos[i].SpawnRelativeLocation + GetActorLocation();
+		FRotator SpawnRotation = MonsterSpawnInfos[i].SpawnRelativeRotation + GetActorRotation();
+
+		AActor* Monster = World->SpawnActor<AEnemy>(MonsterSpawnInfos[i].MonsterClass, SpawnLocation, SpawnRotation);
+		if (Monster)
+		{
+			// 스폰 후 Owner 설정 및 카운트 증가
+			Monster->SetOwner(this);
+			SpawnCount++;
+		}
+	}
+}
+
+void ARoomBase::DecreaseCount()
+{
+	SpawnCount--;
+
+	if (SpawnCount == 0)
+	{
+		SetState(ERoomState::RS_End);
+	}
+}
+
+void ARoomBase::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// 현재 방의 상태가 Ready이고, 충돌한 액터가 플레이어라면?
+	if (CurrentRoomState == ERoomState::RS_Ready && Cast<APlayerCharacter>(OtherActor))
+	{
+		// 방의 상태 변경
+		SetState(ERoomState::RS_Start);
+	}
+}
+
+void ARoomBase::SetState(ERoomState InState)
+{
+	if (CurrentRoomState == InState) return;
+
+	CurrentRoomState = InState;
+
+	switch (CurrentRoomState)
+	{
+	case ERoomState::RS_Ready:
+		ReadyRoom();
+		break;
+
+	case ERoomState::RS_Start:
+		StartRoom();
+		break;
+
+	case ERoomState::RS_End:
+		EndRoom();
+		break;
+	}
+}
+
+void ARoomBase::ReadyRoom()
+{
+	// 문 열기
+	OpenDoor(true);
+}
+
+void ARoomBase::StartRoom()
+{
+	// 문 닫기
+	OpenDoor(false);
+	// 1초 후 몬스터 스폰 (타이머 이용)
+	FTimerDelegate TimerDelegate;
+	TimerDelegate.BindUObject(this, &ARoomBase::SpawnMonster);
+
+	SpawnTimerHandle.Invalidate();
+	GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, TimerDelegate, 2.0f, false);
+}
+
+void ARoomBase::EndRoom()
+{
+	// 문 열기
+	OpenDoor(true);
 }
 
 void ARoomBase::CreateMeshComponent()
 {
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	SetRootComponent(BoxComp);
+
+	BoxComp->SetBoxExtent(FVector(1900.0f, 1900.0f, 100.0f));
+	BoxComp->SetCollisionProfileName(TEXT("Room"));
 
 	FloorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FloorMesh"));
 	FloorMesh->SetupAttachment(RootComponent);

@@ -4,11 +4,36 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "RoomInterface.h"
 #include "RoomEnums.h"
 #include "RoomBase.generated.h"
 
+UENUM(BlueprintType)
+enum class ERoomState : uint8
+{
+	RS_None,	// None
+	RS_Ready,	// Init
+	RS_Start,	// Player Enter
+	RS_End,		// Room Clear
+};
+
+USTRUCT(BlueprintType)
+struct FMonsterSpawnInfo
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AEnemy> MonsterClass;
+
+	UPROPERTY(EditAnywhere)
+	FVector SpawnRelativeLocation;
+
+	UPROPERTY(EditAnywhere)
+	FRotator SpawnRelativeRotation;
+};
+
 UCLASS()
-class SHOOTINGGAME3D_API ARoomBase : public AActor
+class SHOOTINGGAME3D_API ARoomBase : public AActor, public IRoomInterface
 {
 	GENERATED_BODY()
 	
@@ -23,14 +48,42 @@ public:
 
 // Init
 public:
-	void InitRoom(uint8 OpenDirFlag);
+	void InitRoom(uint8 OpenDirFlag, int32 RoomCount);
 
 // Create
 private:
 	void CreateMeshComponent();
 	void InitRoomTransform();
 	void SetDoor(EOpenDir OpenDir);
-	void OpenDoor();
+
+// Collision
+protected:
+	UFUNCTION()
+	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+// RoomState
+protected:
+	// Current State
+	ERoomState CurrentRoomState;
+
+	// Change Room State
+	void SetState(ERoomState InState);
+
+	// Init Room (Start : Open Door)
+	void ReadyRoom();
+	// Start Room (Player Enter : Close Door, Spawn Monster)
+	void StartRoom();
+	// End Room (Room Clear : Open Door)
+	virtual void EndRoom();
+
+// Game Logic
+private:
+	void OpenDoor(bool bIsOpen);
+	void SpawnMonster();
+
+public:
+	virtual void DecreaseCount() override;
+	FORCEINLINE virtual int32 GetRoomNum() override { return RoomNum; }
 
 // Components
 private:
@@ -64,4 +117,15 @@ private:
 	TObjectPtr<class UStaticMeshComponent> Down_Door;
 	UPROPERTY(VisibleAnywhere, Category = "Room")
 	TObjectPtr<class UStaticMeshComponent> Down_Wall;
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Room")
+	TArray<FMonsterSpawnInfo> MonsterSpawnInfos;
+
+	FTimerHandle SpawnTimerHandle;
+
+	int32 SpawnCount;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 RoomNum;
 };
