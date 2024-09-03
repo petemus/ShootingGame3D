@@ -19,7 +19,7 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Components ����
+	// Components 생성
 	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh Component"));
 	meshComp->SetupAttachment(RootComponent);
 	bodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body StaticMesh"));
@@ -28,16 +28,14 @@ APlayerCharacter::APlayerCharacter()
 	headMesh->SetupAttachment(meshComp);
 	
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
-
 	arrowComp->SetupAttachment(meshComp);
 	leftArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Left Arrow"));
 	leftArrow->SetupAttachment(meshComp);
 	rightArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Arrow"));
 	rightArrow->SetupAttachment(meshComp);
 
-	// collision prest ����
-	//UPrimitiveComponent* root = Cast<UPrimitiveComponent>(RootComponent);
-	//if(root != nullptr) root->SetCollisionProfileName(TEXT("Player"));
+	circleArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Circle Arrow"));
+	circleArrow->SetupAttachment(RootComponent);
 
 }
 
@@ -46,19 +44,20 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// pc�������� subsystem �������� subsys���� imc�� ����
+	// pc를 가져와서 subsystem을 가져오고 subsys와 IMC를 연결
 	APlayerController* pc = GetWorld()->GetFirstPlayerController();
-	// ��ȿ�� Ȯ��
 	if (pc != nullptr)
 	{
 		UEnhancedInputLocalPlayerSubsystem* subsys
 			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc->GetLocalPlayer());
 		if (subsys != nullptr)
 		{
-			// �Է� subsystem�� imc ���� ���� ����
 			subsys->AddMappingContext(imc_playerInput, 0);
 		}
 	}
+
+	// 이벤트 바인딩
+	OnAttackEvent.BindUFunction(this, FName("AttackCircle"));
 	
 }
 
@@ -67,7 +66,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// �Ѿ� �߻� �ð��� tick���� ���־����
+	// nowTime을 Tick에서 세주어야함 
 	nowTime += GetWorld()->GetDeltaSeconds();
 
 }
@@ -77,7 +76,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	// imc�� ia ����
+	// imc와 IA 바인딩 
 	UEnhancedInputComponent* enhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (enhancedInputComponent != nullptr)
 	{
@@ -90,53 +89,49 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::SetAttackMode(EItemType type)
 {
-	// item type�� ���� attack mode �ٸ��� ����
+	// item type -> attack mode 다르게 할당
 	switch (type)
 	{
 	case EItemType::BlueItem:
 		myAttackMode = EAttackMode::GreatAttack;
-		// ���� �ð� �Ŀ� �ٽ� ��� ����
-		// timer�� �����ұ�, tick���� ���� �ұ� 
 		break;
 	case EItemType::GreenItem:
 		myAttackMode = EAttackMode::TripleAttack;
 		break;
 	case EItemType::PurpleItem:
-		// �̺�Ʈ ȣ�� 
+		// 이벤트 발생
+		if(OnAttackEvent.IsBound())
+		{
+			OnAttackEvent.Execute();
+		}
 		break;
 	default:
 		break;
 	}
 
-	// Timer�� ���ؼ� ���� �ʿ�
-	// ���� �ð� �ķ� �ٽ� attack mode ���� 
-	FTimerHandle myTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(myTimerHandle, FTimerDelegate::CreateLambda([&]()
-	{
-		// ���� ���ϴ� �ڵ� ����
-		myAttackMode = EAttackMode::NormalAttack;
-
-		// Ÿ�̸� �ʱ�ȭ
-		GetWorld()->GetTimerManager().ClearTimer(myTimerHandle);
-	}), attackTime, false);
+	// Timer
+	//FTimerHandle myTimerHandle;
+	//GetWorld()->GetTimerManager().SetTimer(myTimerHandle, FTimerDelegate::CreateLambda([&]()
+	//	{
+	//		myAttackMode = EAttackMode::NormalAttack;
+	//	}), attackTime, false);
 }
 
 void APlayerCharacter::Move(const FInputActionValue& value)
 {
-	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); ��� ���
+	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); 
 	FVector2D moveVec = value.Get<FVector2D>();
 
-	// ���� ���� ���ϱ�
+	// 방향 벡터 구하기
 	FVector dir = FVector(moveVec.X, moveVec.Y, 0);
 	dir.Normalize();
 
-	// ��� �̵� 
+	// 등속 이동 
 	//FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
 	//SetActorLocation(newLocation);
 
 	float Scalar = moveSpeed * GetWorld()->GetDeltaSeconds();
-	// AddMovementInput�� dir�� worldDirection.. 
-	// ��� �������� �ٲ����ϴµ�
+	// AddMovementInput의 dir은 worldDirection.. 
 	AddMovementInput(dir, Scalar);
 	
 	
@@ -150,14 +145,13 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 	FVector dir = FVector(vec.X, vec.Y, 0);
 	dir.Normalize();
 
-	// character�� ���� ����
-	// Find Look at Rotation -> start���� Target���� ����ų ȸ���� ��ȯ
+	// character 회전
+	// mesh를 직접 회전하는 게 아니라 actor를 직접 회전하는 게 더 좋을듯
+	// FindLookAtRotation은 짐벌락을 발생시킬 수 있으므로 다른 함수 사용하는 게 좋을듯 
 	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + dir);
 	meshComp->SetWorldRotation(rotate);
 	
-	// bullet forward �������� spawn
-	// spawn time ���� spawn ���ϰ�
-	// Attack Mode�� ���� �ٸ� ����
+	
 	switch (myAttackMode)
 	{
 	case EAttackMode::NormalAttack:
@@ -189,7 +183,56 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 
 }
 
-void APlayerCharacter::SetDamaged(int32 Amount)
+ void APlayerCharacter::AttackCircle()
+ {
+	// 현재 Circle Arrow에서 15도씩 0.2초마다 돌면서 bullet 발사
+	// Arrow가 한바퀴 돌면 종료
+	
+	// Timer 호출
+	
+	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([&]()
+	{
+
+		if(circleArrowAngle >= 360.0f)
+		{
+			// 한바퀴 다 돌면 timer 종료
+			circleArrowAngle = 0;
+			GetWorld()->GetTimerManager().ClearTimer(timerHandle);
+		}
+	
+		GetWorld()->SpawnActor<ABullet>(bulletFactory, circleArrow->GetComponentLocation(), circleArrow->GetComponentRotation());
+		
+		// circle arrow가 actor의 위치 즉 상대 좌표에서의 0,0,0을 기준으로 이동하면서 회전해야함 
+		FRotator newRotation = circleArrow->GetComponentRotation();
+		newRotation.Yaw += rotateAmount;
+		circleArrow->SetRelativeRotation(newRotation);
+		// 이동 
+		
+		//FVector moveDir = circleArrow->GetForwardVector();
+		//moveDir.Normalize();
+		//FVector moveLoc = moveDir * 50;
+		//circleArrow->SetWorldLocation(moveLoc + GetActorLocation());
+
+		circleArrowAngle += rotateAmount;
+		
+	}),  rotateTime, true);
+	
+	
+ }
+
+ void APlayerCharacter::RotateCircleArrow()
+ {
+
+
+	GetWorld()->SpawnActor<ABullet>(bulletFactory, circleArrow->GetComponentLocation(), circleArrow->GetComponentRotation());
+	
+	FRotator newRotation = circleArrow->GetComponentRotation();
+	newRotation.Yaw += rotateAmount;
+	circleArrow->SetWorldRotation(newRotation);
+		
+ }
+
+ void APlayerCharacter::SetDamaged(int32 Amount)
 {
 
 	Health -= Amount;
