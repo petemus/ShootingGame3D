@@ -23,4 +23,15 @@ public:
 	TSubclassOf< UGameOverWidget> GameOverWidget;
 	
 	UGameOverWidget* GameOverUI;
+
+public:
+	void MiniMapSet(int32 RoomIdx, uint8 OpenFlag);
+	void HpSet(int32 CurrentHp);
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Widget")
+	TSubclassOf<class UPlayerHUD> HUDWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<class UPlayerHUD> HUDWidget;
 };
