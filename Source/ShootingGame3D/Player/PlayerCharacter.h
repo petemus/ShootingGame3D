@@ -103,13 +103,14 @@ private:
 	// Circel Attack의 각도와 시간 변수
 	float rotateAmount = 15;
 	float rotateTime = 0.1f;
-
+	// circle attack timerhandle
 	FTimerHandle timerHandle;
-
 	
 	// event 변수
 	UPROPERTY()
 	FOnAttackEvent OnAttackEvent;
+
+
 
 private:
 	// 현재 circle arrow의 앵글을 저장할 변수
@@ -130,6 +131,14 @@ private:
 	void AttackCircle();
 	// 공격 이벤트에서 timer로 계속 반복하는 rotate 함수
 	void RotateCircleArrow();
+
+	// void Knock-Back
+	void KnockBack(AActor* OtherActor);
+	
+	// OnComponentbeginoverlap
+	UFUNCTION()
+	void OnCapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+						  int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 public:
 	UFUNCTION(BlueprintCallable)

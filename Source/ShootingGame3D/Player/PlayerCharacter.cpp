@@ -37,12 +37,22 @@ APlayerCharacter::APlayerCharacter()
 	circleArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Circle Arrow"));
 	circleArrow->SetupAttachment(RootComponent);
 
+	
 }
 
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	/*UCapsuleComponent* Capsule = Cast<UCapsuleComponent>(RootComponent);*/
+	UCapsuleComponent* Capsule = GetCapsuleComponent();
+	if(Capsule == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("capsuele 없음"));
+	}
+	else Capsule->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnCapsuleOverlap);
+	
 
 	// pc를 가져와서 subsystem을 가져오고 subsys와 IMC를 연결
 	APlayerController* pc = GetWorld()->GetFirstPlayerController();
@@ -85,7 +95,31 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
+void APlayerCharacter::KnockBack(AActor* OtherActor)
+{
+	// 실제로는 SetDamaged()에서 호출하면 other actor에 대한 정보를 얻을 수 없으므로
+	// OnOverlapEvent에 하거나 아니면 SetDamage에서 actor에 대한 정보를 얻어야함
+	// 근데 OnOverlapEvent에서 할려면 Enemybullet과 Enemy임을 확인해줘야 함
 
+	// 힘 주기 -> AddImpulse() 사용 -> physics 적용해줘야 함
+	// -> LaunchCharacter( velocity, true,ture);
+	// XY축의 속도 무시, Z축 속도 무시 
+
+	FVector knockBackDir = GetActorLocation() - OtherActor->GetActorLocation();
+	knockBackDir.Normalize();
+	knockBackDir.Z = 0;
+	LaunchCharacter(knockBackDir * 1000, true, true);
+	
+}
+
+
+ void APlayerCharacter::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+ {
+
+	UE_LOG(LogTemp, Warning, TEXT("OnCapsuleOverlap"));
+	KnockBack(OtherActor);
+ }
 
 void APlayerCharacter::SetAttackMode(EItemType type)
 {
@@ -231,6 +265,7 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 	circleArrow->SetWorldRotation(newRotation);
 		
  }
+
 
  void APlayerCharacter::SetDamaged(int32 Amount)
 {
