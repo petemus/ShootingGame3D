@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Item.h"
@@ -13,7 +13,7 @@ AItem::AItem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// comp »ı¼º
+	// comp ìƒì„±
 	sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere collider"));
 	SetRootComponent(sphereComp);
 	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
@@ -21,7 +21,7 @@ AItem::AItem()
 
 	// collsiion setting
 	sphereComp->SetCollisionProfileName(TEXT("Item"));
-	// delegate Ãß°¡
+	// delegate ì¶”ê°€
 	sphereComp->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 }
 
@@ -36,13 +36,13 @@ void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 	{
 		player->SetAttackMode(myItemType);
 	}
-	// item ÆÄ±«
+	// item íŒŒê´´
 	Destroy();
 }
 
 void AItem::Rotate(float DeltaTime)
 {
-	// Áö¼ÓÀûÀ¸·Î È¸Àü 
+	// ì§€ì†ì ìœ¼ë¡œ íšŒì „ 
 	FRotator addRotate = FRotator(0, 110 * DeltaTime, 0);
 	AddActorLocalRotation(addRotate);
 }
@@ -59,7 +59,7 @@ void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// È¸Àü 
+	// íšŒì „ 
 	Rotate(DeltaTime);
 }
 

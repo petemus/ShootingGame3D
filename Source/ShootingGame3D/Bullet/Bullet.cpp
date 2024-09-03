@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+Ôªø// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Bullet.h"
@@ -14,7 +14,7 @@ ABullet::ABullet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Components ª˝º∫
+	// Components ÏÉùÏÑ±
 	sphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collider"));
 	SetRootComponent(sphereComp);
 
@@ -22,15 +22,15 @@ ABullet::ABullet()
 	meshComp->SetupAttachment(sphereComp);
 
 	// collision setting
-	// ¿œ¥‹ preset¿∏∑Œ µÓ∑œ
+	// ÏùºÎã® presetÏúºÎ°ú Îì±Î°ù
 	sphereComp->SetCollisionProfileName(TEXT("PlayerBullet"));
-	// √Êµπ ¿Ã∫•∆Æ «‘ºˆ µ®∏Æ∞‘¿Ã∆Æø° µÓ∑œ
+	// Ï∂©Îèå Ïù¥Î≤§Ìä∏ Ìï®Ïàò Îç∏Î¶¨Í≤åÏù¥Ìä∏Ïóê Îì±Î°ù
 	sphereComp->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnSphereOverlap);
 }
 
 void ABullet::Move(float DeltaTime)
 {
-	// æ’¿∏∑Œ ¿Ãµø 
+	// ÏïûÏúºÎ°ú Ïù¥Îèô 
 	FVector newLocation = GetActorLocation() + (DeltaTime * speed * GetActorForwardVector());
 	SetActorLocation(newLocation);
 }
@@ -51,11 +51,11 @@ void ABullet::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* 
 		AEnemy* enemy = Cast<AEnemy>(OtherActor);
 		if (enemy != nullptr)
 		{
-			// Player∏¶ æÓ∂ª∞‘ ∞Æ∞Ì ø√±Ó...
+			// PlayerÎ•º Ïñ¥ÎñªÍ≤å Í∞ñÍ≥† Ïò¨Íπå...
 			APlayerCharacter* player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			if (player != nullptr)
 			{
-				// ∫Øºˆø° πŸ∑Œ ¡¢±Ÿ«œ¥¬ ∞≈ ∫∞∑Œ æ»¡¡¿∫µ•...
+				// Î≥ÄÏàòÏóê Î∞îÎ°ú Ï†ëÍ∑ºÌïòÎäî Í±∞ Î≥ÑÎ°ú ÏïàÏ¢ãÏùÄÎç∞...
 				enemy->SetDamaged(player->AttackStat + bulletDamage);
 				Destroy();
 			}

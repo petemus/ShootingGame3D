@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
-// ItemÀÇ Á¾·ù¸¦ ³ªÅ¸³»´Â enum
+// Itemì˜ ì¢…ë¥˜ë¥¼ ë‚˜íƒ€ë‚´ëŠ” enum
 UENUM()
 enum class EItemType : uint8
 {
