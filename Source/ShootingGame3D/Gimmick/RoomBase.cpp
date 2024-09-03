@@ -4,9 +4,11 @@
 #include "RoomBase.h"
 #include "ShootingGame3D/Player/PlayerCharacter.h"
 #include "ShootingGame3D/Enemy/Enemy.h"
+#include "ShootingGame3D/Public/ShootingGameModeBase.h"
 
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ARoomBase::ARoomBase()
 {
@@ -41,6 +43,7 @@ void ARoomBase::InitRoom(uint8 OpenDirFlag, int32 RoomCount)
 {
 	// 현재 방의 넘버 저장
 	RoomNum = RoomCount;
+	RoomOpenFlag = OpenDirFlag;
 
 	// 연결된 Map 구조에 따라 초기화
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_LEFT)) SetDoor(EOpenDir::EOD_LEFT);
@@ -170,11 +173,21 @@ void ARoomBase::DecreaseCount()
 
 void ARoomBase::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// 현재 방의 상태가 Ready이고, 충돌한 액터가 플레이어라면?
-	if (CurrentRoomState == ERoomState::RS_Ready && Cast<APlayerCharacter>(OtherActor))
+	// 충돌한 액터가 플레이어라면?
+	if (Cast<APlayerCharacter>(OtherActor))
 	{
-		// 방의 상태 변경
-		SetState(ERoomState::RS_Start);
+		// 현재 방의 상태가 Ready라면?
+		if (CurrentRoomState == ERoomState::RS_Ready)
+		{
+			// 방의 상태 변경
+			SetState(ERoomState::RS_Start);
+		}
+		
+		AShootingGameModeBase* GM = Cast<AShootingGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GM)
+		{
+			GM->MiniMapSet(RoomNum, RoomOpenFlag);
+		}
 	}
 }
 

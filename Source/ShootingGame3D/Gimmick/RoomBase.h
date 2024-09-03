@@ -128,4 +128,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	int32 RoomNum;
+
+	UPROPERTY(VisibleAnywhere)
+	uint8 RoomOpenFlag;
 };
