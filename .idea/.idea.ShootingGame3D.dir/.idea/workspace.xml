@@ -9,9 +9,9 @@
   <component name="ChangeListManager">
     <list default="true" id="48488483-da86-4cb0-8ce5-866af4c70408" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ShootingGame3D.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ShootingGame3D.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/LCU/BP_Enemy/BP_FixedEnemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/LCU/BP_Enemy/BP_FixedEnemy.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_ShootingGameModeBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_ShootingGameModeBase.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/RoomBP/BP_StartRoom.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/RoomBP/BP_StartRoom.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/LeeTaes/Blueprints/BP_TestGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LeeTaes/Blueprints/BP_TestGameMode.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Level/ShootingGameLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Level/ShootingGameLevel.umap" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +140,7 @@
       <workItem from="1725439343918" duration="708000" />
       <workItem from="1725459556289" duration="20000" />
       <workItem from="1725459625437" duration="5000" />
-      <workItem from="1725459640000" duration="1053000" />
+      <workItem from="1725459640000" duration="2093000" />
     </task>
     <servers />
   </component>
