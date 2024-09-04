@@ -14,6 +14,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "../Enemy/Enemy.h"
 #include "../Enemy/EnemyBullet.h"
+#include "Kismet/GameplayStatics.h"
+#include "../Public/ShootingGameModeBase.h"
 
 // enemy, enemy bullet
 
@@ -121,6 +123,7 @@ void APlayerCharacter::KnockBack(AActor* OtherActor)
  void APlayerCharacter::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
  {
+
 	auto enemy = Cast<AEnemy>(OtherActor);
 	auto enemyBullet = Cast<AEnemyBullet>(OtherActor);
 	
@@ -290,6 +293,13 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 
 	Health -= Amount;
 
+	// 데미지 UI에 추가
+	AShootingGameModeBase* GameModeBase = Cast<AShootingGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	if(GameModeBase != nullptr)
+	{
+		GameModeBase->HpSet(Health);
+	}
+	
 	if (Health <= 0)
 	{
 		Health = 0;
