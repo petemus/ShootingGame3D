@@ -2,13 +2,21 @@
 
 
 #include "ShootingGameModeBase.h"
+#include "ShootingGame3D/Gimmick/DungeonGeneratorComponent.h"
 #include "ShootingGame3D/UI/GameOverWidget.h"
 
 #include "ShootingGame3D/UI/PlayerHUD.h"
 
 
+AShootingGameModeBase::AShootingGameModeBase()
+{
+	DungeonGenerator = CreateDefaultSubobject<UDungeonGeneratorComponent>(TEXT("DungeonGenerator"));
+}
+
 void AShootingGameModeBase::BeginPlay()
 {
+	Super::BeginPlay();
+
 	if (GameOverWidget != nullptr)
 	{
 		GameOverUI = CreateWidget<UGameOverWidget>(GetWorld(), GameOverWidget);
@@ -37,7 +45,6 @@ void AShootingGameModeBase::MiniMapSet(int32 RoomIdx, uint8 OpenFlag)
 	if (HUDWidget)
 	{
 		HUDWidget->SetCurrentRoom(RoomIdx, OpenFlag);
-		//HUDWidget->SetHp(5);
 	}
 }
 

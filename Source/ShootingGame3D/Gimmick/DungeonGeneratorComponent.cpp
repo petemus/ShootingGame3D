@@ -12,7 +12,7 @@ UDungeonGeneratorComponent::UDungeonGeneratorComponent()
 	// Default Value Set
 	Width = 4;
 	Height = 3;
-	RoomSize = 4000.0f;
+	RoomSize = 2800.0f;
 }
 
 
@@ -63,49 +63,47 @@ void UDungeonGeneratorComponent::GenerateMaze()
 	// 2. 모든 방이 체크가 될 때까지 반복해서 미로 생성하기
 	while (CheckCnt != DungeonMaps.Num())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%d"), TempRooms.Num());
-
 		// 랜덤한 방 뽑기
 		int32 RandIdx = TempRooms[FMath::RandRange(0, TempRooms.Num() - 1)];
-	
+
 		// 해당 방 방문처리
 		DungeonMaps[RandIdx].bIsVisited = true;
 		// 카운트 증가
 		CheckCnt++;
 		// 해당 방 임시 방 목록에서 제거
 		TempRooms.Remove(RandIdx);
-	
+
 		// 해당 방으로부터 상하좌우 체크하여 연결해줄 방을 구해줍니다.
 		EOpenDir ConnectDir = CheckDir(RandIdx);
-	
+
 		// 만약 연결할 수 있는 방이 존재한다면?
 		if (ConnectDir != EOpenDir::EOD_NONE)
 		{
 			// 해당 방향과 이어주도록 합니다.
 			// * 현재 방
 			DungeonMaps[RandIdx].OpenDir |= static_cast<uint8>(ConnectDir);
-	
+
 			// * 연결한 방
 			switch (ConnectDir)
 			{
 			case EOpenDir::EOD_LEFT:
 				DungeonMaps[RandIdx - 1].OpenDir |= static_cast<uint8>(EOpenDir::EOD_RIGHT);
 				break;
-	
+
 			case EOpenDir::EOD_RIGHT:
 				DungeonMaps[RandIdx + 1].OpenDir |= static_cast<uint8>(EOpenDir::EOD_LEFT);
 				break;
-	
+
 			case EOpenDir::EOD_UP:
 				DungeonMaps[RandIdx - Width].OpenDir |= static_cast<uint8>(EOpenDir::EOD_DOWN);
 				break;
-	
+
 			case EOpenDir::EOD_DOWN:
 				DungeonMaps[RandIdx + Width].OpenDir |= static_cast<uint8>(EOpenDir::EOD_UP);
 				break;
 			}
 		}
-	
+
 		// 해당 방의 상하좌우를 체크하여 방문되지 않은 방들을 배열에 추가합니다.
 		if (DungeonMaps.IsValidIndex(RandIdx - Width) && DungeonMaps[RandIdx - Width].bIsVisited == false) TempRooms.Add(RandIdx - Width);
 		if (DungeonMaps.IsValidIndex(RandIdx + Width) && DungeonMaps[RandIdx + Width].bIsVisited == false) TempRooms.Add(RandIdx + Width);
@@ -135,9 +133,29 @@ void UDungeonGeneratorComponent::SpawnMaze()
 				int32 RandIdx = FMath::RandRange(0, RoomClassArray.Num() - 1);
 
 				// 해당 위치에 스폰하기
-				ARoomBase* Room = GetWorld()->SpawnActorDeferred<ARoomBase>(RoomClassArray[RandIdx], SpawnTransform);
-				Room->InitRoom(DungeonMaps[(y * Width) + x].OpenDir, DungeonMaps[(y * Width) + x].RoomNum);
-				Room->FinishSpawning(SpawnTransform);
+
+				ARoomBase* Room;
+				// * 시작 방
+				if ((y * Width) + x == 0)
+				{
+					Room = GetWorld()->SpawnActorDeferred<ARoomBase>(StartRoomClass, SpawnTransform);
+				}
+				// * 보스방
+				else if ((y * Width) + x == Width * Height - 1)
+				{
+					Room = GetWorld()->SpawnActorDeferred<ARoomBase>(BossRoomClass, SpawnTransform);
+				}
+				// * 일반 방
+				else
+				{
+					Room = GetWorld()->SpawnActorDeferred<ARoomBase>(RoomClassArray[RandIdx], SpawnTransform);
+				}
+				
+				if (Room)
+				{
+					Room->InitRoom(DungeonMaps[(y * Width) + x].OpenDir, DungeonMaps[(y * Width) + x].RoomNum);
+					Room->FinishSpawning(SpawnTransform);
+				}	
 			}
 		}
 	}

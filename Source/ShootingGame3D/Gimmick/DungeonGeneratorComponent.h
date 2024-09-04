@@ -42,4 +42,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Dungeon")
 	TArray<TSubclassOf<class ARoomBase>> RoomClassArray;
+
+	UPROPERTY(EditAnywhere, Category = "Dungeon")
+	TSubclassOf<class ARoomBase> BossRoomClass;
+
+	UPROPERTY(EditAnywhere, Category = "Dungeon")
+	TSubclassOf<class ARoomBase> StartRoomClass;
 };

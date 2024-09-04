@@ -16,6 +16,7 @@ class SHOOTINGGAME3D_API AShootingGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 public:
+	AShootingGameModeBase();
 	virtual void BeginPlay() override;
 public:
 
@@ -27,6 +28,10 @@ public:
 public:
 	void MiniMapSet(int32 RoomIdx, uint8 OpenFlag);
 	void HpSet(int32 CurrentHp);
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	TObjectPtr<class UDungeonGeneratorComponent> DungeonGenerator;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Widget")

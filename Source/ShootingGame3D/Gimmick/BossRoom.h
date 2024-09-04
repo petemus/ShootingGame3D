@@ -14,4 +14,14 @@ class SHOOTINGGAME3D_API ABossRoom : public ARoomBase
 {
 	GENERATED_BODY()
 	
+public:
+	ABossRoom();
+
+public:
+	virtual void Tick(float DeltaTime) override;
+
+	// RoomState
+protected:
+	// End Room (Room Clear : Open Door)
+	virtual void EndRoom() override;
 };

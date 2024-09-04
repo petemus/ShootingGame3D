@@ -306,6 +306,7 @@ void ARoomBase::CreateMeshComponent()
 
 void ARoomBase::InitRoomTransform()
 {
+	BoxComp->SetRelativeScale3D(FVector(0.7f, 0.7f, 0.7f));
 	FloorMesh->SetRelativeScale3D(FVector(10.0f, 10.0f, 1.0f));
 
 	Left_Wall->SetRelativeLocationAndRotation(FVector(0.0f, -2000.0f, 850.0f), FRotator(0.0f, 90.0f, 0.0f));

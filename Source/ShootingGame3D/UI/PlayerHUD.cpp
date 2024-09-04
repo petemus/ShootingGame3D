@@ -70,25 +70,33 @@ void UPlayerHUD::SetCurrentRoom(int32 InIdx, uint8 OpenFlag)
 void UPlayerHUD::SetHp(int32 CurrentHp)
 {
 	if (CurrentHp > 6) return;
-
+	// 그림 : 1: half, 2: full, 3: empty
+	// 하트 인덱스 :      0    1    2
+	// 체력         0   1 2  3 4  5 6
+	// 인덱스                        
+	// 현재 인덱스 구하기
 	int32 Idx = (CurrentHp - 1) / 2;
 	
-	for (int32 i = 0; i < 3; i++)
+
+	if (CurrentHp == 0)
 	{
-		if (i + 1< Idx)
+		for (UImage* HpImg : Hps)
 		{
-			// 하트 가득 채우기
-			Hps[Idx]->SetBrushFromTexture(HpTexture[1]);
+			HpImg->SetBrushFromTexture(HpTexture[3]);
 		}
-		else if (i + 1 == Idx)
+	}
+	else
+	{
+		for (int i = Idx; i < Hps.Num(); i++)
 		{
-			// 체력에 따라 채우기 (짝수면 가득, 홀수면 반칸)
-			Hps[Idx]->SetBrushFromTexture(HpTexture[CurrentHp % 2] + 1);
-		}
-		else if (i + 1 > Idx)
-		{
-			// 모두 비우기
-			Hps[Idx]->SetBrushFromTexture(HpTexture[3]);
+			if (i == Idx)
+			{
+				Hps[i]->SetBrushFromTexture(HpTexture[((CurrentHp - 1) % 2) + 1]);
+			}
+			else
+			{
+				Hps[i]->SetBrushFromTexture(HpTexture[3]);
+			}
 		}
 	}
 }
