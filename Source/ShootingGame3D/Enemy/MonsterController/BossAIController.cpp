@@ -14,8 +14,7 @@ ABossAIController::ABossAIController()
 // Called when the game starts or when spawned
 void ABossAIController::BeginPlay()
 {
-	Super::BeginPlay();
-	
+	Super::BeginPlay();	
 	
 }
 

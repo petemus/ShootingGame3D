@@ -9,6 +9,7 @@
 #include "../PlayerPawn.h"
 #include "../ShootingGameLogic/ShootingGameInstance.h"
 #include "TimerManager.h"
+#include "ShootingGame3D/Gimmick/RoomBase.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -128,6 +129,22 @@ void AEnemy::SetDamaged(int32 Amount)
 			ShootingGameIns->AddGold(EnemyGold);
 		}
 
+		// Room_Decrease
+		//AActor* OwnerActor =  GetOwner();
+//
+		//if (OwnerActor)
+		//{
+		//	ARoomBase* OwnerRoom = Cast<ARoomBase>(OwnerActor);
+		//	if (OwnerRoom)
+		//	{
+		//		IRoomInterface* OwnerRoomInterface = Cast<IRoomInterface>(OwnerRoom);
+		//		if (OwnerRoomInterface)
+		//		{
+		//			OwnerRoomInterface->DecreaseCount();
+		//		}
+		//	}
+		//}
+		
 		Destroy();
 	}
 }
