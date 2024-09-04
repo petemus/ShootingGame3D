@@ -9,9 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="48488483-da86-4cb0-8ce5-866af4c70408" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ShootingGame3D.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ShootingGame3D.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Level/ShootingGameLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Level/ShootingGameLevel.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_ShootingGameModeBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_ShootingGameModeBase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/LeeTaes/Blueprints/BP_TestGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/LeeTaes/Blueprints/BP_TestGameMode.uasset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,19 +37,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Uproject.ShootingGame3D.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;hr__Character__Knock-Back&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Uproject.ShootingGame3D.executor": "Run",
+    "git-widget-placeholder": "hr__RoomLevelDesign",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="ShootingGame3D" type="Uproject" factoryName="rider.uproject">
       <configuration_1>
@@ -137,6 +136,7 @@
       <workItem from="1725374927655" duration="4666000" />
       <workItem from="1725432072851" duration="3880000" />
       <workItem from="1725436038489" duration="1285000" />
+      <workItem from="1725439343918" duration="708000" />
     </task>
     <servers />
   </component>
