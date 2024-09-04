@@ -64,34 +64,35 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UArrowComponent* circleArrow;
 
+
 	// IMC, IA
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputMappingContext* imc_playerInput;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputAction* ia_move;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Input")
 	 UInputAction* ia_fire;
 
 	// Bullet Factory
 	// content browser에서의 값을 할당할려면 TSubclassOf
 	// detail 창에서 할당할려면 그냥 클래스 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
 	TSubclassOf<class ABullet> bulletFactory;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
 	TSubclassOf<class ABullet> bigbulletFactory;
 
 
 public:
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Setting")
 	float moveSpeed = 500;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Setting")
 	int32 Health = 6;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Setting")
 	float spawnTime = 0.5;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Setting")
 	int32 AttackStat = 1;
 
 private:

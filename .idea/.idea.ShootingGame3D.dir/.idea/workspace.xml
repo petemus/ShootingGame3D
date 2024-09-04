@@ -9,8 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="48488483-da86-4cb0-8ce5-866af4c70408" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ShootingGame3D.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ShootingGame3D.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprint/LCU/BP_Enemy/BP_FixedEnemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprint/LCU/BP_Enemy/BP_FixedEnemy.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Level/ShootingGameLevel.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Level/ShootingGameLevel.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.h" afterDir="false" />
@@ -40,19 +38,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Uproject.ShootingGame3D.executor": "Run",
-    "git-widget-placeholder": "hr__Character__Knock-Back",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Uproject.ShootingGame3D.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;hr__Character__Knock-Back&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="ShootingGame3D" type="Uproject" factoryName="rider.uproject">
       <configuration_1>
@@ -61,7 +59,7 @@
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/ShootingGame3D.uproject" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\hhln0\Unreal Projects\ShootingGame3D\ShootingGame3D.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\SBA\Documents\Unreal Projects\ShootingGame3D\ShootingGame3D.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -74,7 +72,7 @@
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/ShootingGame3D.uproject" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
         <option name="EXECUTABLE_PATH" value="C:\Program Files\Epic Games\UE_5.4\Engine\Binaries\Win64\UnrealEditor-Win64-DebugGame.exe" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\hhln0\Unreal Projects\ShootingGame3D\ShootingGame3D.uproject&quot;" />
+        <option name="MANDATORY_PROGRAM_PARAMETERS" value=" &quot;C:\Users\SBA\Documents\Unreal Projects\ShootingGame3D\ShootingGame3D.uproject&quot;" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
         <option name="PASS_PARENT_ENVS" value="1" />
@@ -86,7 +84,7 @@
         <option name="PLATFORM" value="Win64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/ShootingGame3D.uproject" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="C:\Users\hhln0\Unreal Projects\ShootingGame3D\Binaries\Win64\ShootingGame3D-Win64-DebugGame.exe" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\SBA\Documents\Unreal Projects\ShootingGame3D\Binaries\Win64\ShootingGame3D-Win64-DebugGame.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
@@ -99,7 +97,7 @@
         <option name="PLATFORM" value="Win64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/ShootingGame3D.uproject" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="C:\Users\hhln0\Unreal Projects\ShootingGame3D\Binaries\Win64\ShootingGame3D.exe" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\SBA\Documents\Unreal Projects\ShootingGame3D\Binaries\Win64\ShootingGame3D.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
@@ -112,7 +110,7 @@
         <option name="PLATFORM" value="Win64" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/ShootingGame3D.uproject" />
         <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="C:\Users\hhln0\Unreal Projects\ShootingGame3D\Binaries\Win64\ShootingGame3D-Win64-Shipping.exe" />
+        <option name="EXECUTABLE_PATH" value="C:\Users\SBA\Documents\Unreal Projects\ShootingGame3D\Binaries\Win64\ShootingGame3D-Win64-Shipping.exe" />
         <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
         <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
         <option name="WORKING_DIRECTORY" value="C:\Program Files\Epic Games\UE_5.4" />
@@ -120,19 +118,6 @@
         <option name="USE_EXTERNAL_CONSOLE" value="1" />
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="FORCE_CONSOLE" />
       </configuration_5>
-      <configuration_6>
-        <option name="CONFIGURATION" value="" />
-        <option name="PLATFORM" value="" />
-        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/ShootingGame3D.uproject" />
-        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
-        <option name="EXECUTABLE_PATH" value="" />
-        <option name="MANDATORY_PROGRAM_PARAMETERS" value="" />
-        <option name="CUSTOM_PROGRAM_PARAMETERS" value="" />
-        <option name="WORKING_DIRECTORY" value="" />
-        <option name="PASS_PARENT_ENVS" value="1" />
-        <option name="USE_EXTERNAL_CONSOLE" value="1" />
-        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
-      </configuration_6>
       <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/ShootingGame3D.uproject" />
       <option name="AUTO_SELECT_PRIORITY" value="10010" />
       <method v="2">
@@ -150,6 +135,8 @@
       <updated>1725344049814</updated>
       <workItem from="1725344050725" duration="6563000" />
       <workItem from="1725374927655" duration="4666000" />
+      <workItem from="1725432072851" duration="3880000" />
+      <workItem from="1725436038489" duration="1285000" />
     </task>
     <servers />
   </component>
