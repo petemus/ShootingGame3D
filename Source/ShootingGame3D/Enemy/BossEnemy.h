@@ -7,9 +7,11 @@
 #include "EnemyType.h"
 #include "BossEnemy.generated.h"
 
+class AInDirectEnemyBullet;
 class ADirectEnemyBullet;
+class UMaterial;;
 
-
+class UDecalComponent;
 
 UCLASS()
 class SHOOTINGGAME3D_API ABossEnemy : public AEnemy
@@ -38,6 +40,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AttackPattern2();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackPattern3();
+	
+	UFUNCTION(BlueprintCallable)
+	void Attack3Arrived();
 	
 	// 발사 위치를 업데이트합니다.
 	void UpdateFirePosition();
@@ -59,6 +67,9 @@ public:
 	TSubclassOf<ADirectEnemyBullet> Bullet;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<AInDirectEnemyBullet> InDirectBullet;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	EEnemyState currentState = EEnemyState::None;
 
 public:
@@ -75,8 +86,29 @@ public:
 	/* Attack2 Value (include Spline) */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USplineActorComponent* SplineComp;
+	
 	FTimerHandle SplineTimer;
+	
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decal")
+	// UDecalComponent* SmallCircleDecal;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decal")
+	//UDecalComponent* BigCircleDecal;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decal")
+	UMaterial* RedMat;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decal")
+	UMaterial* GreenMat;
 
+	/* Attack3 Value */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector TargetPosition;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Attack3MoveSpeed = 700.f;
+	
+	bool bIsAttack3Moving = true;	
+	float ArrivalTarget = 30.f;
+	FTimerHandle Attack3TimerHandle;
+	
 };
 

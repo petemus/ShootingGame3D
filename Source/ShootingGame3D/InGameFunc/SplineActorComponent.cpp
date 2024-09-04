@@ -59,7 +59,7 @@ void USplineActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		for(int32 i =0; i< NumberOfPoints ; ++i)
 		{
 						
-			SplineMeshDistances[i] += + DeltaTime*MoveSpeed;
+			SplineMeshDistances[i] += DeltaTime*MoveSpeed;
 
 			if (SplineMeshDistances[i] > SplineComponent->GetSplineLength())
 			{
@@ -75,7 +75,7 @@ void USplineActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 			if (NextDis > SplineComponent->GetSplineLength())
 			{
-				NextDis -= SplineComponent->GetSplineLength();
+				//NextDis -= SplineComponent->GetSplineLength();
 			}
 			
 			FVector NewLocation2 =  SplineComponent->GetLocationAtDistanceAlongSpline(NextDis, ESplineCoordinateSpace::World);
@@ -112,14 +112,29 @@ void USplineActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		FVector L1 = FMath::Lerp(StartPosition, MidPosition, MoveRatio);
 		FVector L2 = FMath::Lerp(MidPosition, TargetPosition, MoveRatio);
 
-		FVector NewLocation = FMath::Lerp(L1, L2, MoveRatio);
 		
-		CreatedOwner->SetActorLocation(NewLocation);
+		FVector NewLocation = FMath::Lerp(L1, L2, MoveRatio);
 
+		AActor* owner =  GetOwner();
+
+		if(owner)
+		{
+			owner->SetActorLocation(NewLocation);
+		}
+		
+		//CreatedOwner->SetActorLocation(NewLocation);
+		
 		if(MoveRatio >= 1.f)
 		{
 			bCompletePath = false;
 			MoveRatio = 0.f;
+
+			// 데칼 되면 변경하고 싶다/....
+			ABossEnemy* Boss = Cast<ABossEnemy>(owner);
+			if(Boss)
+			{
+				Boss->currentState = EEnemyState::Chasing;
+			}
 		}
 	}
 }
@@ -132,7 +147,9 @@ void USplineActorComponent::SetOwnerActor(AActor* InOwner)
 void USplineActorComponent::Init(FVector StartLocation, FVector MidLocation, FVector TargetLocation)
 {
 	StartPosition = StartLocation;
-	MidPosition = MidLocation;
+	MidPosition.X = MidLocation.X;
+	MidPosition.Y = MidLocation.Y;
+	MidPosition.Z = MidLocation.Z*2.f;
 	TargetPosition = TargetLocation;
 	
 	SplineComponent->ClearSplinePoints();

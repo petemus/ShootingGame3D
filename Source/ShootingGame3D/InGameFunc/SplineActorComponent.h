@@ -66,7 +66,7 @@ public:
 	// 실제 이동 관련 
 	bool bCompletePath = false;
 	float StartMoveTime = 0.f;
-	float TotalMoveTime = 1.3f;
+	float TotalMoveTime = 0.5f;
 	FVector StartPosition;
 	FVector MidPosition;
 	FVector TargetPosition;

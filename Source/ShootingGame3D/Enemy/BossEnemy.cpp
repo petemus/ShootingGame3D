@@ -4,6 +4,8 @@
 #include "BossEnemy.h"
 
 #include "DirectEnemyBullet.h"
+#include "InDirectEnemyBullet.h"
+#include "Components/DecalComponent.h"
 #include "Components/SplineComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ShootingGame3D/InGameFunc/SplineActorComponent.h"
@@ -20,6 +22,32 @@ ABossEnemy::ABossEnemy()
 
 	SplineComp = CreateDefaultSubobject<USplineActorComponent>(TEXT("Spline Component"));
 	SplineComp->SetOwnerActor(this);
+	SplineComp->SplineComponent->SetupAttachment(GetRootComponent());
+
+	//SmallCircleDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("SmallCircleDecal"));
+	//SmallCircleDecal->SetupAttachment(GetRootComponent());
+	//SmallCircleDecal->DecalSize = FVector(100.0f, 200.0f, 200.0f);
+////
+	//BigCircleDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("BigCircleDecal"));
+	//BigCircleDecal->SetupAttachment(GetRootComponent());
+	//BigCircleDecal->DecalSize = FVector(200.0f, 400.0f, 400.0f);
+
+		static ConstructorHelpers::FObjectFinder<UMaterial> redMaterial(TEXT("/Script/Engine.Material'/Game/Blueprint/Mat/M_RedCircle.M_RedCircle'"));
+		static ConstructorHelpers::FObjectFinder<UMaterial> greenMaterial(TEXT("/Script/Engine.Material'/Game/Blueprint/Mat/M_GreenCircle.M_GreenCircle'"));
+	
+		if(redMaterial.Succeeded() && greenMaterial.Succeeded())
+		{
+			RedMat = redMaterial.Object;
+			GreenMat = greenMaterial.Object;
+		}
+	//SmallCircleDecal->SetDecalMaterial(RedMat);
+	//SmallCircleDecal->SetVisibility(true);
+	//BigCircleDecal->SetDecalMaterial(GreenMat);
+	//BigCircleDecal->SetVisibility(true);
+	//
+	//SmallCircleDecal->SetRelativeLocation(FVector(0.0f, 0.0f, 2.0f));
+	//BigCircleDecal->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); 
+	
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +63,7 @@ void ABossEnemy::BeginPlay()
 	for (int i = 0; i < 24; ++i)
 	{
 		float Angle = 15.f * i;
+		
 		FRotator Rot = FRotator(0.f, Angle, 0.f);
 
 		FVector RotVec = Rot.RotateVector(Offset);
@@ -64,7 +93,10 @@ void ABossEnemy::Tick(float DeltaTime)
 		Chase();
 		break;
 	case EEnemyState::Attack:
-		Attack();
+		if(bCanAttack1)
+		{
+			Attack();
+		}
 		break;
 	case EEnemyState::Die:
 		Die();
@@ -82,7 +114,11 @@ void ABossEnemy::CalChasingTime()
 
 		// 나중에 릴펙터링
 		bCanAttack1 = true;
-		
+		ACharacter* playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		if(playerCharacter)
+		{
+			TargetPosition = playerCharacter->GetActorLocation();
+		}
 		currentState = EEnemyState::Attack;
 	}
 }
@@ -181,8 +217,74 @@ void ABossEnemy::AttackPattern2()
 	
 	SplineComp->Init(GetActorLocation(), MidVector, PlayerCharacter->GetActorLocation());
 	
-	GetWorld()->GetTimerManager().SetTimer(SplineTimer, this, &ABossEnemy::SplineMove, 3.f, false, 3.f);
+	//GetWorld()->GetTimerManager().SetTimer(SplineTimer, this, &ABossEnemy::SplineMove, 3.f, false, 3.f);
 	
+}
+
+void ABossEnemy::AttackPattern3()
+{
+	if (bIsAttack3Moving)
+	{
+		FVector CurrentLocation = GetActorLocation();
+		FVector Direction = (TargetPosition - CurrentLocation).GetSafeNormal();
+		float Distance = FVector::Dist(CurrentLocation, TargetPosition);
+		UE_LOG(LogTemp, Warning, TEXT("%f"), Distance);
+
+		if (Distance <= ArrivalTarget)
+		{
+			// 목표 위치에 도달했음
+			SetActorLocation(TargetPosition);
+			bIsAttack3Moving = false;
+			GetWorld()->GetTimerManager().SetTimer(Attack3TimerHandle, this, &ThisClass::Attack3Arrived, 1.f,false);
+		}
+		else
+		{
+			// 이동을 계속합니다
+			FVector NewLocation = CurrentLocation + (Direction * Attack3MoveSpeed * GetWorld()->GetDeltaSeconds());
+			SetActorLocation(FVector(NewLocation.X, NewLocation.Y, GetActorLocation().Z));
+
+			FRotator Rot = FRotator(GetActorRotation().Pitch, Direction.Rotation().Yaw, GetActorRotation().Roll);
+			FQuat Dir = Rot.Quaternion();
+
+			SetActorRotation(Dir);
+		}
+	}
+}
+
+void ABossEnemy::Attack3Arrived()
+{
+	
+	for(int i=0; i < FirePoses.Num(); ++i)
+	{
+		float Angle = 15.f * i;
+
+		FVector dir = FirePoses[i] - GetActorLocation();
+		dir.Normalize();
+
+		float Dis = FMath::RandRange(300.f, 1500.0f);
+
+		FVector TargetLocation = FirePoses[i] + dir * Dis;
+		FVector HighLocation = (TargetLocation + FirePoses[i])/2;
+		HighLocation.Z = FMath::RandRange(200.f,400.f);
+
+		FRotator Rot = dir.Rotation();
+		
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(FirePoses[i]);
+		SpawnTransform.SetRotation(Rot.Quaternion());
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+		
+		AInDirectEnemyBullet* bullet = GetWorld()->SpawnActor<AInDirectEnemyBullet>(InDirectBullet,SpawnTransform, SpawnParams);
+		if(bullet)
+		{
+			bullet->InitialVar(TargetLocation, HighLocation, 1.f);
+		}
+	}
+	bIsAttack3Moving = true;
+	currentState = EEnemyState::Chasing;
 }
 
 
@@ -225,7 +327,7 @@ void ABossEnemy::Chase()
 void ABossEnemy::Attack()
 {
 	int32 RandomIdx = FMath::RandRange(0,2);
-	RandomIdx = 1;
+	RandomIdx = 2;
 	switch (RandomIdx)
 	{
 		case 0:
@@ -236,16 +338,22 @@ void ABossEnemy::Attack()
 			}
 			break;
 		case 1:
-			// 2초동안 경로를 보여주는 함수
-			if(bCanAttack1)
 			{
-				AttackPattern2();
-				bCanAttack1 = false;
+				// 2초동안 경로를 보여주는 함수
+				if(bCanAttack1)
+				{
+					AttackPattern2();
+					bCanAttack1 = false;
+				}
+				break;
 			}
-			break;
-		case 2:
 			
+		case 2:
+			{
+				AttackPattern3();
 			break;
+				
+			}
 	}
 }
 
