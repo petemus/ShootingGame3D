@@ -33,6 +33,8 @@ public:
 
 	virtual void Move(float DeltaTime) override;
 
+	virtual void SetDamaged(int32 Amount) override;
+
 
 	UFUNCTION(BlueprintCallable)
 	void AttackPattern1();
@@ -48,6 +50,7 @@ public:
 	
 	// 발사 위치를 업데이트합니다.
 	void UpdateFirePosition();
+	void UpdateHealth();
 
 	void DelayBigCircleColOverlap();
 
@@ -78,6 +81,7 @@ public:
 	EEnemyState currentState = EEnemyState::None;
 
 public:
+	int32 RandomIdx = 0;
 	/* Attack1 Value */
 	FTimerHandle Attack1Timer;
 	int32 Attack1Loop = 0;
@@ -126,6 +130,13 @@ public:
 	bool bIsAttack3Moving = true;	
 	float ArrivalTarget = 70.f;
 	FTimerHandle Attack3TimerHandle;
-	
+
+
+	/* BossUI */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UBossUI> BossUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UBossUI* BossWidget;
 };
 

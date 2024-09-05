@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "ShootingGame3D/InGameFunc/SplineActorComponent.h"
 #include "ShootingGame3D/Player/PlayerCharacter.h"
+#include "../UI/BossUI.h"
 
 
 // Sets default values
@@ -18,7 +19,8 @@ ABossEnemy::ABossEnemy()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
+	
 	currentState = EEnemyState::Idle;
 
 	SplineComp = CreateDefaultSubobject<USplineActorComponent>(TEXT("Spline Component"));
@@ -45,36 +47,32 @@ ABossEnemy::ABossEnemy()
 	BigCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Ignore);
 	BigCircleCol->OnComponentBeginOverlap.AddDynamic(this, &ABossEnemy::ABossEnemy::OnBigCircleOverlap);
 	
-	//SmallCircleDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("SmallCircleDecal"));
-	//SmallCircleDecal->SetupAttachment(GetRootComponent());
-	//SmallCircleDecal->DecalSize = FVector(100.0f, 200.0f, 200.0f);
-////
-	//BigCircleDecal = CreateDefaultSubobject<UDecalComponent>(TEXT("BigCircleDecal"));
-	//BigCircleDecal->SetupAttachment(GetRootComponent());
-	//BigCircleDecal->DecalSize = FVector(200.0f, 400.0f, 400.0f);
 
-		static ConstructorHelpers::FObjectFinder<UMaterial> redMaterial(TEXT("/Script/Engine.Material'/Game/Blueprint/Mat/M_RedCircle.M_RedCircle'"));
-		static ConstructorHelpers::FObjectFinder<UMaterial> greenMaterial(TEXT("/Script/Engine.Material'/Game/Blueprint/Mat/M_GreenCircle.M_GreenCircle'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> redMaterial(TEXT("/Script/Engine.Material'/Game/Blueprint/Mat/M_RedCircle.M_RedCircle'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> greenMaterial(TEXT("/Script/Engine.Material'/Game/Blueprint/Mat/M_GreenCircle.M_GreenCircle'"));
 	
-		if(redMaterial.Succeeded() && greenMaterial.Succeeded())
-		{
-			RedMat = redMaterial.Object;
-			GreenMat = greenMaterial.Object;
-		}
-	//SmallCircleDecal->SetDecalMaterial(RedMat);
-	//SmallCircleDecal->SetVisibility(true);
-	//BigCircleDecal->SetDecalMaterial(GreenMat);
-	//BigCircleDecal->SetVisibility(true);
-	//
-	//SmallCircleDecal->SetRelativeLocation(FVector(0.0f, 0.0f, 2.0f));
-	//BigCircleDecal->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); 
-	
+	if(redMaterial.Succeeded() && greenMaterial.Succeeded())
+	{
+		RedMat = redMaterial.Object;
+		GreenMat = greenMaterial.Object;
+	}	
 }
 
 // Called when the game starts or when spawned
 void ABossEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// widget create
+	if(BossUI)
+	{
+		BossWidget = CreateWidget<UBossUI>(GetWorld(), BossUI);
+		if(BossWidget != nullptr)
+		{
+			BossWidget->AddToViewport();
+		}
+	}
+	
 	SmallCircle->SetVisibility(false);
 	BigCircle->SetVisibility(false);
 
@@ -94,8 +92,6 @@ void ABossEnemy::BeginPlay()
 
 		FirePoses.AddUnique(NewPos);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Collision Channel: %d"), SmallCircleCol->GetCollisionObjectType());
-	
 }
 
 // Called every frame
@@ -117,7 +113,7 @@ void ABossEnemy::Tick(float DeltaTime)
 		break;
 	case EEnemyState::Attack:
 		if(bCanAttack1)
-		{
+		{			
 			Attack();
 		}
 		break;
@@ -135,13 +131,13 @@ void ABossEnemy::CalChasingTime()
 	{
 		ChasingTime = 0.f;
 
-		// 나중에 릴펙터링
 		bCanAttack1 = true;
 		ACharacter* playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 		if(playerCharacter)
 		{
 			TargetPosition = playerCharacter->GetActorLocation();
 		}
+		RandomIdx = FMath::RandRange(0,2);
 		currentState = EEnemyState::Attack;
 	}
 }
@@ -158,7 +154,12 @@ void ABossEnemy::Move(float DeltaTime)
 
 	if (!Pawn) return;
 
-	
+	float Dis = FVector::Dist(Pawn->GetActorLocation(), GetActorLocation());
+
+	if(Dis <= 30.f)
+	{
+		return;
+	}
 	FVector PlayerToMe = (Pawn->GetActorLocation() - GetActorLocation()).GetSafeNormal();
 	PlayerToMe = PlayerToMe * GetWorld()->GetDeltaSeconds() * MoveSpeed;
 
@@ -171,6 +172,12 @@ void ABossEnemy::Move(float DeltaTime)
 
 	SetActorRotation(Dir);
 
+}
+
+void ABossEnemy::SetDamaged(int32 Amount)
+{
+	Super::SetDamaged(Amount);
+	UpdateHealth();
 }
 
 
@@ -210,21 +217,16 @@ void ABossEnemy::AttackPattern1()
 		Attack1Inx = 0;
 		currentState = EEnemyState::Chasing;
 	}
-
-	
 }
 
 void ABossEnemy::AttackPattern2()
-{
-	
+{	
 	ACharacter* PlayerC = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	
 	if(!PlayerC) return;
 
 	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(PlayerC);
 	
-	UE_LOG(LogTemp, Warning, TEXT("%f"), PlayerCharacter->GetActorLocation().X);
-
 	float midX = (GetActorLocation().X + PlayerCharacter->GetActorLocation().X) * 0.5f;
 	float midY = (GetActorLocation().Y + PlayerCharacter->GetActorLocation().Y) * 0.5f;
 	float midZ = FMath::RandRange(200.f,400.f);
@@ -256,7 +258,6 @@ void ABossEnemy::AttackPattern3()
 		FVector CurrentLocation = GetActorLocation();
 		FVector Direction = (TargetPosition - CurrentLocation).GetSafeNormal();
 		float Distance = FVector::Dist(CurrentLocation, TargetPosition);
-		UE_LOG(LogTemp, Warning, TEXT("%f"), Distance);
 
 		if (Distance <= ArrivalTarget)
 		{
@@ -335,6 +336,12 @@ void ABossEnemy::UpdateFirePosition()
 	}
 }
 
+void ABossEnemy::UpdateHealth()
+{
+	float percent = static_cast<float>(CurrentHealth)/ static_cast<float>(MaxHealth);
+	BossWidget->UpdateHealth(percent);
+}
+
 void ABossEnemy::DelayBigCircleColOverlap()
 {
 	BigCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Overlap);
@@ -388,7 +395,6 @@ void ABossEnemy::Chase()
 
 void ABossEnemy::Attack()
 {
-	int32 RandomIdx = FMath::RandRange(0,2);
 	switch (RandomIdx)
 	{
 		case 0:
@@ -400,7 +406,6 @@ void ABossEnemy::Attack()
 			break;
 		case 1:
 			{
-				// 2초동안 경로를 보여주는 함수
 				if(bCanAttack1)
 				{
 					AttackPattern2();
