@@ -41,7 +41,7 @@ void ABullet::Move(float DeltaTime)
 {
 	// overlap -> worldstatic : Destroy
 	// overlap -> Enemy : Damage enemy
-	if (OtherComp->GetCollisionObjectType() == ECC_WorldStatic)
+	if (OtherComp->GetCollisionObjectType() == ECC_WorldStatic || OtherComp->GetCollisionObjectType() == ECC_WorldDynamic)
 	{
 		Destroy();
 	}

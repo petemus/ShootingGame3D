@@ -16,7 +16,14 @@ void UStartWidget::NativeConstruct()
 
 void UStartWidget::Start()
 {
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if(PC)
+	{
+		FInputModeGameOnly Input;
+		PC->SetInputMode(Input);
+	}
 	UGameplayStatics::OpenLevel(GetWorld(), FName("MainLevel"));
+	
 }
 
 

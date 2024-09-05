@@ -133,11 +133,12 @@ void USplineActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			ABossEnemy* Boss = Cast<ABossEnemy>(owner);
 			if(Boss)
 			{
-				Boss->SmallCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Overlap);
+				Boss->SmallCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Overlap);
+				Boss->GetWorld()->GetTimerManager().SetTimer(Boss->BigCircleHandle, Boss, &ABossEnemy::BigCircleNoCol, 0.1f, false, 0.1f);
 				// 머터리얼 교체
 				Boss->SmallCircle->SetMaterial(0, Boss->GreenMat);
 				Boss->BigCircle->SetMaterial(0, Boss->RedMat);
-				GetWorld()->GetTimerManager().SetTimer(TimerHandle, Boss, &ABossEnemy::DelayBigCircleColOverlap, 2.f, false);
+				GetWorld()->GetTimerManager().SetTimer(TimerHandle, Boss, &ABossEnemy::DelayBigCircleColOverlap, 2.f, false, 2.f);
 			}
 		}
 	}

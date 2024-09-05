@@ -38,13 +38,13 @@ ABossEnemy::ABossEnemy()
 	SmallCircleCol = CreateDefaultSubobject<USphereComponent>(TEXT("SmallCircleCol"));
 	SmallCircleCol->SetupAttachment(GetRootComponent());
 	SmallCircleCol->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Ignore);
-	SmallCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Ignore);
+	SmallCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
 	SmallCircleCol->OnComponentBeginOverlap.AddDynamic(this, &ABossEnemy::OnSmallCircleOverlap);
 	
 	BigCircleCol = CreateDefaultSubobject<USphereComponent>(TEXT("BigCircleCol"));
 	BigCircleCol->SetupAttachment(GetRootComponent());
 	BigCircleCol->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Ignore);
-	BigCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Ignore);
+	BigCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
 	BigCircleCol->OnComponentBeginOverlap.AddDynamic(this, &ABossEnemy::ABossEnemy::OnBigCircleOverlap);
 	
 
@@ -237,12 +237,14 @@ void ABossEnemy::AttackPattern2()
 	SmallCircle->SetVisibility(true);
 	FVector SmallCirclePosition = FVector(PlayerCharacter->GetActorLocation().X, PlayerCharacter->GetActorLocation().Y, PlayerCharacter->GetActorLocation().Z - 90.f);
 	SmallCircle->SetWorldLocation(SmallCirclePosition);
+	SmallCircleCol->SetWorldLocation(SmallCirclePosition);
 	SmallCircle->SetMaterial(0, RedMat);
 
 	// 머터리얼 초록색
 	BigCircle->SetVisibility(true);
 	FVector BigCirclePosition = FVector(PlayerCharacter->GetActorLocation().X, PlayerCharacter->GetActorLocation().Y, PlayerCharacter->GetActorLocation().Z - 93.f);
 	BigCircle->SetWorldLocation(BigCirclePosition);
+	BigCircleCol->SetWorldLocation(SmallCirclePosition);
 	BigCircle->SetMaterial(0, GreenMat);
 	
 	SplineComp->Init(GetActorLocation(), MidVector, PlayerCharacter->GetActorLocation());
@@ -344,9 +346,11 @@ void ABossEnemy::UpdateHealth()
 
 void ABossEnemy::DelayBigCircleColOverlap()
 {
-	BigCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Overlap);
+	BigCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Overlap);
 	BigCircle->SetVisibility(false);
 	SmallCircle->SetVisibility(false);
+	// TODO
+	GetWorld()->GetTimerManager().SetTimer(SmallCircleHandle, this, &ABossEnemy::SmallCircleNoCol, 0.1f, false, 0.1f);
 	currentState = EEnemyState::Chasing;
 }
 
@@ -359,7 +363,7 @@ void ABossEnemy::OnSmallCircleOverlap(UPrimitiveComponent* OverlappedComp, AActo
 		if(APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor))
 		{
 			ApplyDamageToPlayer(OtherActor);
-			SmallCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Ignore);
+			SmallCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
 		}
 	}
 }
@@ -371,14 +375,24 @@ void ABossEnemy::OnBigCircleOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 	{
 		if(APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(OtherActor))
 		{
-			float Dis = FVector::Dist(PlayerCharacter->GetActorLocation(), GetActorLocation());
+			float Dis = FVector::Dist(PlayerCharacter->GetActorLocation(), BigCircleCol->GetComponentLocation());
 			if(Dis >= SmallCircleCol->GetScaledSphereRadius())
 			{
 				ApplyDamageToPlayer(OtherActor);
 			}
-			SmallCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Ignore);
+			BigCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
 		}
 	}
+}
+
+void ABossEnemy::SmallCircleNoCol()
+{
+	SmallCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
+}
+
+void ABossEnemy::BigCircleNoCol()
+{
+	BigCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
 }
 
 void ABossEnemy::Idle()

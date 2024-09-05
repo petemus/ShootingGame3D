@@ -39,8 +39,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AttackPattern1();
 
-	UFUNCTION(BlueprintCallable)
-	void AttackPattern2();
+	
 
 	UFUNCTION(BlueprintCallable)
 	void AttackPattern3();
@@ -52,14 +51,18 @@ public:
 	void UpdateFirePosition();
 	void UpdateHealth();
 
+	/* 어택2 함수 */
+	UFUNCTION(BlueprintCallable)
+	void AttackPattern2();
 	void DelayBigCircleColOverlap();
-
 	UFUNCTION(BlueprintCallable)
 	void OnSmallCircleOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 	UFUNCTION(BlueprintCallable)
 	void OnBigCircleOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
+	UFUNCTION(BlueprintCallable)
+	void SmallCircleNoCol();
+	UFUNCTION(BlueprintCallable)
+	void BigCircleNoCol();
 public:
 	/* StateFunc */
 	void Idle();
@@ -119,6 +122,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack2")
 	USphereComponent* BigCircleCol;
+
+	FTimerHandle SmallCircleHandle;
+	FTimerHandle BigCircleHandle;
 
 	/* Attack3 Value */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
