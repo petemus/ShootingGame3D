@@ -9,8 +9,10 @@
   <component name="ChangeListManager">
     <list default="true" id="48488483-da86-4cb0-8ce5-866af4c70408" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ShootingGame3D.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ShootingGame3D.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Isaac/Animation/BS_IdleRun.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/Isaac/Animation/BS_IdleRun.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Assets/Isaac/Animation/Isacc_run_Anim.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Assets/Isaac/Animation/Isacc_run_Anim.uasset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_PlayerCharacter.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_ShootingGameModeBase.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_ShootingGameModeBase.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/test1.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.h" afterDir="false" />
     </list>
@@ -24,6 +26,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Source/ShootingGame3D/Player/PlayerCharacter.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -134,6 +139,10 @@
       <workItem from="1725432072851" duration="3880000" />
       <workItem from="1725436038489" duration="1285000" />
       <workItem from="1725511302245" duration="6921000" />
+      <workItem from="1725523403875" duration="84000" />
+      <workItem from="1725523499638" duration="165000" />
+      <workItem from="1725523677214" duration="201000" />
+      <workItem from="1725524215732" duration="7717000" />
     </task>
     <servers />
   </component>

@@ -76,7 +76,10 @@ public:
 	TSubclassOf<class ABullet> bulletFactory;
 	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
 	TSubclassOf<class ABullet> bigbulletFactory;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
+	class USoundBase* bulletSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
+	class USoundBase* bulletBigSound;
 
 public:
 	

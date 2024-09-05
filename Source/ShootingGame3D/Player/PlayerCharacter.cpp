@@ -14,8 +14,9 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "../Enemy/Enemy.h"
 #include "../Enemy/EnemyBullet.h"
+#include "Kismet/GameplayStatics.h"
 
-// enemy, enemy bullet
+ // enemy, enemy bullet
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -203,6 +204,7 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 		if (nowTime >= spawnTime)
 		{
 			GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 			nowTime = 0;
 		}
 		break;
@@ -210,6 +212,7 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 		if (nowTime >= spawnTime)
 		{
 			GetWorld()->SpawnActor<ABullet>(bigbulletFactory, arrowComp->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), bulletBigSound);
 			nowTime = 0;
 		}
 		break;
@@ -217,8 +220,11 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 		if (nowTime >= spawnTime)
 		{
 			GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 			GetWorld()->SpawnActor<ABullet>(bulletFactory, leftArrow->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 			GetWorld()->SpawnActor<ABullet>(bulletFactory, rightArrow->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 			nowTime = 0;
 		}
 		break;
@@ -246,6 +252,7 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 		}
 	
 		GetWorld()->SpawnActor<ABullet>(bulletFactory, circleArrow->GetComponentLocation(), circleArrow->GetComponentRotation());
+		UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 		
 		// circle arrow가 actor의 위치 즉 상대 좌표에서의 0,0,0을 기준으로 이동하면서 회전해야함 
 		FRotator newRotation = circleArrow->GetComponentRotation();
@@ -264,7 +271,6 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 		circleArrowAngle += rotateAmount;
 		
 	}),  rotateTime, true);
-	
 	
  }
 
