@@ -23,20 +23,13 @@ APlayerCharacter::APlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Components 생성
-	meshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh Component"));
-	meshComp->SetupAttachment(RootComponent);
-	bodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body StaticMesh"));
-	bodyMesh->SetupAttachment(meshComp);
-	headMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Head StaticMesh"));
-	headMesh->SetupAttachment(meshComp);
-	
+	// Components 생성	
 	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
-	arrowComp->SetupAttachment(meshComp);
+	arrowComp->SetupAttachment(GetMesh());
 	leftArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Left Arrow"));
-	leftArrow->SetupAttachment(meshComp);
+	leftArrow->SetupAttachment(GetMesh());
 	rightArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Arrow"));
-	rightArrow->SetupAttachment(meshComp);
+	rightArrow->SetupAttachment(GetMesh());
 
 	circleArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Circle Arrow"));
 	circleArrow->SetupAttachment(RootComponent);
@@ -179,7 +172,9 @@ void APlayerCharacter::Move(const FInputActionValue& value)
 	// AddMovementInput의 dir은 worldDirection.. 
 	AddMovementInput(dir * -1, Scalar);
 	
-	
+	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + (dir * -1));
+	FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
+	GetMesh()->SetWorldRotation(minus);
 
 	
 }
@@ -195,7 +190,8 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 	// mesh를 직접 회전하는 게 아니라 actor를 직접 회전하는 게 더 좋을듯
 	// FindLookAtRotation은 짐벌락을 발생시킬 수 있으므로 다른 함수 사용하는 게 좋을듯 
 	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + (dir * -1));
-	meshComp->SetWorldRotation(rotate);
+	FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
+	GetMesh()->SetWorldRotation(minus);
 	
 	// 왜 안돌릴까, arrow comp은 돌아가는 것 같은데
 	/*SetActorRotation(rotate);*/

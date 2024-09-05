@@ -50,12 +50,6 @@ public:
 public:
 	// Components
 	UPROPERTY(EditAnywhere, Category = "Components")
-	UStaticMeshComponent* meshComp;
-	UPROPERTY(EditAnywhere, Category = "Components")
-	UStaticMeshComponent* bodyMesh;
-	UPROPERTY(EditAnywhere, Category = "Components")
-	UStaticMeshComponent* headMesh;
-	UPROPERTY(EditAnywhere, Category = "Components")
 	UArrowComponent* arrowComp;
 	UPROPERTY(EditAnywhere, Category = "Components")
 	UArrowComponent* leftArrow;
