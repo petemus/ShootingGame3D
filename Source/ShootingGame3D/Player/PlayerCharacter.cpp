@@ -173,9 +173,9 @@ void APlayerCharacter::Move(const FInputActionValue& value)
 
 	float Scalar = moveSpeed * GetWorld()->GetDeltaSeconds();
 	// AddMovementInput의 dir은 worldDirection.. 
-	AddMovementInput(dir * -1, Scalar);
+	AddMovementInput(dir , Scalar);
 	
-	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + (dir * -1));
+	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + dir);
 	FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
 	GetMesh()->SetWorldRotation(minus);
 
@@ -192,7 +192,7 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 	// character 회전
 	// mesh를 직접 회전하는 게 아니라 actor를 직접 회전하는 게 더 좋을듯
 	// FindLookAtRotation은 짐벌락을 발생시킬 수 있으므로 다른 함수 사용하는 게 좋을듯 
-	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + (dir * -1));
+	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + dir );
 	FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
 	GetMesh()->SetWorldRotation(minus);
 	
@@ -309,14 +309,7 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 		AShootingGameModeBase* SGameMode = Cast<AShootingGameModeBase>(GetWorld()->GetAuthGameMode());
 		if (SGameMode)
 		{
-			SGameMode->GameOverUI->SetVisibility(ESlateVisibility::Visible);
-
-			APlayerController* PController = GetWorld()->GetFirstPlayerController();
-			if (PController)
-			{
-				PController->bShowMouseCursor = true;
-				PController->bEnableClickEvents = true;
-			}
+			SGameMode->GameOver();
 		}
 	}
 }

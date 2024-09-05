@@ -41,17 +41,17 @@ void ARoomBase::Tick(float DeltaTime)
 
 void ARoomBase::InitRoom(uint8 OpenDirFlag, int32 RoomCount)
 {
-	// ÇöÀç ¹æÀÇ ³Ñ¹ö ÀúÀå
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ï¿½ï¿½ï¿½
 	RoomNum = RoomCount;
 	RoomOpenFlag = OpenDirFlag;
 
-	// ¿¬°áµÈ Map ±¸Á¶¿¡ µû¶ó ÃÊ±âÈ­
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ Map ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_LEFT)) SetDoor(EOpenDir::EOD_LEFT);
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_RIGHT)) SetDoor(EOpenDir::EOD_RIGHT);
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_UP)) SetDoor(EOpenDir::EOD_UP);
 	if (OpenDirFlag & static_cast<uint8>(EOpenDir::EOD_DOWN)) SetDoor(EOpenDir::EOD_DOWN);
 
-	// ÃÊ±â »óÅÂ º¯°æ
+	// ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	SetState(ERoomState::RS_Ready);
 }
 
@@ -148,13 +148,14 @@ void ARoomBase::SpawnMonster()
 
 	for (int32 i = 0; i < MonsterSpawnInfos.Num(); i++)
 	{
-		FVector SpawnLocation = MonsterSpawnInfos[i].SpawnRelativeLocation + GetActorLocation();
-		FRotator SpawnRotation = MonsterSpawnInfos[i].SpawnRelativeRotation + GetActorRotation();
+		FVector RelativeSpawnLocation = FVector(MonsterSpawnInfos[i].SpawnRelativeLocation.X * 0.7f, MonsterSpawnInfos[i].SpawnRelativeLocation.Y * 0.7f, MonsterSpawnInfos[i].SpawnRelativeLocation.Z);
+		FVector SpawnLocation = RelativeSpawnLocation + GetActorLocation();
+		FRotator SpawnRotation = MonsterSpawnInfos[i].SpawnRelativeRotation  + GetActorRotation();
 
 		AActor* Monster = World->SpawnActor<AEnemy>(MonsterSpawnInfos[i].MonsterClass, SpawnLocation, SpawnRotation);
 		if (Monster)
 		{
-			// ½ºÆù ÈÄ Owner ¼³Á¤ ¹× Ä«¿îÆ® Áõ°¡
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Owner ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ä«ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 			Monster->SetOwner(this);
 			SpawnCount++;
 		}
@@ -178,13 +179,13 @@ void ARoomBase::DecreaseCount()
 
 void ARoomBase::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	// Ãæµ¹ÇÑ ¾×ÅÍ°¡ ÇÃ·¹ÀÌ¾î¶ó¸é?
+	// ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½?
 	if (Cast<APlayerCharacter>(OtherActor))
 	{
-		// ÇöÀç ¹æÀÇ »óÅÂ°¡ Ready¶ó¸é?
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ Readyï¿½ï¿½ï¿½?
 		if (CurrentRoomState == ERoomState::RS_Ready)
 		{
-			// ¹æÀÇ »óÅÂ º¯°æ
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			SetState(ERoomState::RS_Start);
 		}
 		
@@ -220,15 +221,15 @@ void ARoomBase::SetState(ERoomState InState)
 
 void ARoomBase::ReadyRoom()
 {
-	// ¹® ¿­±â
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	OpenDoor(true);
 }
 
 void ARoomBase::StartRoom()
 {
-	// ¹® ´Ý±â
+	// ï¿½ï¿½ ï¿½Ý±ï¿½
 	OpenDoor(false);
-	// 1ÃÊ ÈÄ ¸ó½ºÅÍ ½ºÆù (Å¸ÀÌ¸Ó ÀÌ¿ë)
+	// 1ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (Å¸ï¿½Ì¸ï¿½ ï¿½Ì¿ï¿½)
 	FTimerDelegate TimerDelegate;
 	TimerDelegate.BindUObject(this, &ARoomBase::SpawnMonster);
 
@@ -238,7 +239,7 @@ void ARoomBase::StartRoom()
 
 void ARoomBase::EndRoom()
 {
-	// ¹® ¿­±â
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	OpenDoor(true);
 }
 
