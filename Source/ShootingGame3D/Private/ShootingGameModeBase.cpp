@@ -6,11 +6,14 @@
 #include "ShootingGame3D/UI/GameOverWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "ShootingGame3D/UI/PlayerHUD.h"
-
+#include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
+#include "ShootingGame3D/UI/GameClearWidget.h"
 
 AShootingGameModeBase::AShootingGameModeBase()
 {
 	DungeonGenerator = CreateDefaultSubobject<UDungeonGeneratorComponent>(TEXT("DungeonGenerator"));
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 }
 
 void AShootingGameModeBase::BeginPlay()
@@ -28,6 +31,17 @@ void AShootingGameModeBase::BeginPlay()
 		}
 	}
 
+	if (GameClearWidget != nullptr)
+	{
+		GameClearUI = CreateWidget<UGameClearWidget>(GetWorld(), GameClearWidget);
+
+		if (GameClearUI != nullptr)
+		{
+			GameClearUI->AddToViewport();
+			GameClearUI->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+
 	if (HUDWidgetClass)
 	{
 		HUDWidget = CreateWidget<UPlayerHUD>(GetWorld(), HUDWidgetClass);
@@ -36,6 +50,12 @@ void AShootingGameModeBase::BeginPlay()
 			HUDWidget->AddToViewport();
 			HUDWidget->InitWidget();
 		}
+	}
+
+	if (DungeonSound)
+	{
+		AudioComponent->SetSound(DungeonSound);
+		AudioComponent->Play();
 	}
 }
 
@@ -73,18 +93,35 @@ void AShootingGameModeBase::GameOver()
 
 void AShootingGameModeBase::GameClaer()
 {
-	// Clear Widget Active + Controller Setting
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (PC)
+	if (GameClearUI)
 	{
-		FInputModeUIOnly InputMode;
-		PC->bShowMouseCursor = true;
-		PC->SetInputMode(InputMode);
+		GameClearUI->SetVisibility(ESlateVisibility::Visible);
+
+		APlayerController* PC = GetWorld()->GetFirstPlayerController();
+		if (PC)
+		{
+			FInputModeUIOnly InputMode;
+			PC->bShowMouseCursor = true;
+			PC->SetInputMode(InputMode);
+		}
 	}
+
+	AudioComponent->Stop();
 }
 
 void AShootingGameModeBase::BackToStartLevel()
 {
 	// Start Level Open
-	//UGameplayStatics::OpenLevel(GetWorld(), TEXT(""));
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("ShootingStartLevel"));
+	AudioComponent->Stop();
+}
+
+void AShootingGameModeBase::PlayBossSound()
+{
+	if (BossSound)
+	{
+		AudioComponent->Stop();
+		AudioComponent->SetSound(BossSound);
+		AudioComponent->Play();
+	}
 }

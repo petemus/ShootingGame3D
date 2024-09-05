@@ -72,7 +72,7 @@ protected:
 	// Init Room (Start : Open Door)
 	void ReadyRoom();
 	// Start Room (Player Enter : Close Door, Spawn Monster)
-	void StartRoom();
+	virtual void StartRoom();
 	// End Room (Room Clear : Open Door)
 	virtual void EndRoom();
 

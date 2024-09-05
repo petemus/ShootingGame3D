@@ -20,8 +20,10 @@ public:
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	// RoomState
+// RoomState
 protected:
+	// Start Room (BossSound Play)
+	virtual void StartRoom() override;
 	// End Room (Room Clear : Open Door)
 	virtual void EndRoom() override;
 };

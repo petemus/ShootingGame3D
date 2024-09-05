@@ -21,9 +21,14 @@ public:
 public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TSubclassOf< UGameOverWidget> GameOverWidget;
+	TSubclassOf<UGameOverWidget> GameOverWidget;
+
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<class UGameClearWidget> GameClearWidget;
 	
 	UGameOverWidget* GameOverUI;
+	class UGameClearWidget* GameClearUI;
 
 public:
 	void MiniMapSet(int32 RoomIdx, uint8 OpenFlag);
@@ -31,6 +36,11 @@ public:
 	void GameOver();
 	void GameClaer();
 	void BackToStartLevel();
+	void PlayBossSound();
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Sound")
+	TObjectPtr<class UAudioComponent> AudioComponent;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
@@ -42,4 +52,10 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class UPlayerHUD> HUDWidget;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	TObjectPtr<class USoundBase> DungeonSound;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	TObjectPtr<class USoundBase> BossSound;
 };

@@ -13,6 +13,17 @@ void ABossRoom::Tick(float DeltaTime)
 {
 }
 
+void ABossRoom::StartRoom()
+{
+	Super::StartRoom();
+
+	AShootingGameModeBase* GM = Cast<AShootingGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GM)
+	{
+		GM->PlayBossSound();
+	}
+}
+
 void ABossRoom::EndRoom()
 {
 	AShootingGameModeBase* GM = Cast<AShootingGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
