@@ -254,7 +254,7 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 		}
 	
 		GetWorld()->SpawnActor<ABullet>(bulletFactory, circleArrow->GetComponentLocation(), circleArrow->GetComponentRotation());
-		UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
+		//UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 		
 		// circle arrow가 actor의 위치 즉 상대 좌표에서의 0,0,0을 기준으로 이동하면서 회전해야함 
 		FRotator newRotation = circleArrow->GetComponentRotation();

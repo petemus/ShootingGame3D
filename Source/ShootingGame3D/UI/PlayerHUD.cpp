@@ -69,7 +69,7 @@ void UPlayerHUD::SetCurrentRoom(int32 InIdx, uint8 OpenFlag)
 
 void UPlayerHUD::SetHp(int32 CurrentHp)
 {
-	if (CurrentHp > 6) return;
+	if (CurrentHp > 6 || CurrentHp < 0) return;
 	// 그림 : 1: half, 2: full, 3: empty
 	// 하트 인덱스 :      0    1    2
 	// 체력         0   1 2  3 4  5 6

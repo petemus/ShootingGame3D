@@ -6,6 +6,8 @@
 #include "ShootingGame3D/UI/StartWidget.h"
 #include "ShootingGame3D/UI/ShopWidget.h"
 #include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundBase.h"
 
 void AStartGameMode::BeginPlay()
 {
@@ -20,6 +22,10 @@ void AStartGameMode::BeginPlay()
 		}
 	}	
 	
+	if (StartSound)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), StartSound);
+	}
 	ShowMouse();
 }
 

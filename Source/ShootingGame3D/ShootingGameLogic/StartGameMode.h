@@ -31,6 +31,7 @@ public:
 
 	UStartWidget* StartUI;
 
-
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USoundBase> StartSound;
 
 };
