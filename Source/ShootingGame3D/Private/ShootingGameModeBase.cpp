@@ -4,7 +4,7 @@
 #include "ShootingGameModeBase.h"
 #include "ShootingGame3D/Gimmick/DungeonGeneratorComponent.h"
 #include "ShootingGame3D/UI/GameOverWidget.h"
-
+#include "Kismet/GameplayStatics.h"
 #include "ShootingGame3D/UI/PlayerHUD.h"
 
 
@@ -23,7 +23,6 @@ void AShootingGameModeBase::BeginPlay()
 
 		if (GameOverUI != nullptr)
 		{
-			GameOverUI->SetStartMode(this);
 			GameOverUI->AddToViewport();
 			GameOverUI->SetVisibility(ESlateVisibility::Hidden);
 		}
@@ -54,4 +53,38 @@ void AShootingGameModeBase::HpSet(int32 CurrentHp)
 	{
 		HUDWidget->SetHp(CurrentHp);
 	}
+}
+
+void AShootingGameModeBase::GameOver()
+{
+	if (GameOverUI)
+	{
+		GameOverUI->SetVisibility(ESlateVisibility::Visible);
+		
+		APlayerController* PC = GetWorld()->GetFirstPlayerController();
+		if (PC)
+		{
+			FInputModeUIOnly InputMode;
+			PC->bShowMouseCursor = true;
+			PC->SetInputMode(InputMode);
+		}
+	}
+}
+
+void AShootingGameModeBase::GameClaer()
+{
+	// Clear Widget Active + Controller Setting
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		FInputModeUIOnly InputMode;
+		PC->bShowMouseCursor = true;
+		PC->SetInputMode(InputMode);
+	}
+}
+
+void AShootingGameModeBase::BackToStartLevel()
+{
+	// Start Level Open
+	//UGameplayStatics::OpenLevel(GetWorld(), TEXT(""));
 }

@@ -28,6 +28,9 @@ public:
 public:
 	void MiniMapSet(int32 RoomIdx, uint8 OpenFlag);
 	void HpSet(int32 CurrentHp);
+	void GameOver();
+	void GameClaer();
+	void BackToStartLevel();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")

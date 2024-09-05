@@ -2,6 +2,8 @@
 
 
 #include "BossRoom.h"
+#include "ShootingGame3D/Public/ShootingGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 ABossRoom::ABossRoom()
 {
@@ -13,5 +15,9 @@ void ABossRoom::Tick(float DeltaTime)
 
 void ABossRoom::EndRoom()
 {
-	UE_LOG(LogTemp, Warning, TEXT("HH"));
+	AShootingGameModeBase* GM = Cast<AShootingGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GM)
+	{
+		GM->GameClaer();
+	}
 }

@@ -17,11 +17,12 @@ class SHOOTINGGAME3D_API UGameOverWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadWrite)
-	AShootingGameModeBase* GameMode;
+	virtual void NativeConstruct() override;
+	
+	UFUNCTION()
+	void BackToStartMenu();
 
-	/* Get Set */
-	AShootingGameModeBase* GetStartMode() { return GameMode; }
-
-	void SetStartMode(AShootingGameModeBase* mode);
+public:
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UButton> BTN_MainMenu;
 };
