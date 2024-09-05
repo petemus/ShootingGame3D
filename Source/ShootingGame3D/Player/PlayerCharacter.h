@@ -97,7 +97,7 @@ private:
 	float nowTime = spawnTime;
 	// attack mode 
 	EAttackMode myAttackMode = EAttackMode::NormalAttack;
-	float attackTime = 3;
+	float attackTime = 5;
 	// Circel Attack의 각도와 시간 변수
 	float rotateAmount = 15;
 	float rotateTime = 0.1f;
