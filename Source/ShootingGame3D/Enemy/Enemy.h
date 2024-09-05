@@ -82,7 +82,7 @@ public:
 	void OnCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION(BlueprintCallable)
-	void ApplyDamageToPlayer(AActor* Player);
+	virtual void ApplyDamageToPlayer(AActor* Player);
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyContinueDamage();

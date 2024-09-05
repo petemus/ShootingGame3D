@@ -3,6 +3,7 @@
 
 #include "SplineActorComponent.h"
 
+#include "Components/SphereComponent.h"
 #include "Components/SplineComponent.h"
 #include "Components/SplineMeshComponent.h"
 #include "ShootingGame3D/Enemy/BossEnemy.h"
@@ -115,7 +116,7 @@ void USplineActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		
 		FVector NewLocation = FMath::Lerp(L1, L2, MoveRatio);
 
-		AActor* owner =  GetOwner();
+		AActor* owner = GetOwner();
 
 		if(owner)
 		{
@@ -129,11 +130,14 @@ void USplineActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			bCompletePath = false;
 			MoveRatio = 0.f;
 
-			// 데칼 되면 변경하고 싶다/....
 			ABossEnemy* Boss = Cast<ABossEnemy>(owner);
 			if(Boss)
 			{
-				Boss->currentState = EEnemyState::Chasing;
+				Boss->SmallCircleCol->SetCollisionResponseToChannel(ECC_EngineTraceChannel5, ECR_Overlap);
+				// 머터리얼 교체
+				Boss->SmallCircle->SetMaterial(0, Boss->GreenMat);
+				Boss->BigCircle->SetMaterial(0, Boss->RedMat);
+				GetWorld()->GetTimerManager().SetTimer(TimerHandle, Boss, &ABossEnemy::DelayBigCircleColOverlap, 2.f, false);
 			}
 		}
 	}

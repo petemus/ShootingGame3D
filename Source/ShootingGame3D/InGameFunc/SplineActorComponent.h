@@ -73,4 +73,6 @@ public:
 
 	// 경로들의 웅ㅁ직임
 	TArray<float> SplineMeshDistances;
+
+	FTimerHandle TimerHandle;
 };

@@ -33,7 +33,6 @@ public:
 
 	virtual void Move(float DeltaTime) override;
 
-	virtual void SetDamaged(int32 Amount) override;
 
 	UFUNCTION(BlueprintCallable)
 	void AttackPattern1();
@@ -50,8 +49,14 @@ public:
 	// 발사 위치를 업데이트합니다.
 	void UpdateFirePosition();
 
-	void SplineMove();
+	void DelayBigCircleColOverlap();
 
+	UFUNCTION(BlueprintCallable)
+	void OnSmallCircleOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintCallable)
+	void OnBigCircleOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
 public:
 	/* StateFunc */
 	void Idle();
@@ -94,10 +99,22 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decal")
 	//UDecalComponent* BigCircleDecal;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decal")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack2")
 	UMaterial* RedMat;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Decal")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack2")
 	UMaterial* GreenMat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* SmallCircle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* BigCircle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack2")
+	class USphereComponent* SmallCircleCol;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack2")
+	USphereComponent* BigCircleCol;
 
 	/* Attack3 Value */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -107,7 +124,7 @@ public:
 	float Attack3MoveSpeed = 700.f;
 	
 	bool bIsAttack3Moving = true;	
-	float ArrivalTarget = 30.f;
+	float ArrivalTarget = 70.f;
 	FTimerHandle Attack3TimerHandle;
 	
 };
