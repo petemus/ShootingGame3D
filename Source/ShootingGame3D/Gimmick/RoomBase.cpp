@@ -159,6 +159,11 @@ void ARoomBase::SpawnMonster()
 			SpawnCount++;
 		}
 	}
+
+	if (SpawnCount == 0)
+	{
+		SetState(ERoomState::RS_End);
+	}
 }
 
 void ARoomBase::DecreaseCount()

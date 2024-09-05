@@ -13,4 +13,5 @@ void ABossRoom::Tick(float DeltaTime)
 
 void ABossRoom::EndRoom()
 {
+	UE_LOG(LogTemp, Warning, TEXT("HH"));
 }
