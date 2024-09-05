@@ -9,6 +9,8 @@
 #include "../PlayerPawn.h"
 #include "../ShootingGameLogic/ShootingGameInstance.h"
 #include "TimerManager.h"
+#include "ShootingGame3D/Gimmick/RoomBase.h"
+#include "ShootingGame3D/Player/PlayerCharacter.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -90,11 +92,11 @@ void AEnemy::OnCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void AEnemy::ApplyDamageToPlayer(AActor* Player)
 {
-	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(Player);
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Player);
 
-	if (!PlayerPawn) return;
+	if (!PlayerCharacter) return;
 
-	IDamagedInterface* DamagedInter = Cast<IDamagedInterface>(PlayerPawn);
+	IDamagedInterface* DamagedInter = Cast<IDamagedInterface>(PlayerCharacter);
 
 	if (!DamagedInter) return;
 
@@ -128,6 +130,13 @@ void AEnemy::SetDamaged(int32 Amount)
 			ShootingGameIns->AddGold(EnemyGold);
 		}
 
+		// Room_Decrease
+		IRoomInterface* OwnerRoomInterface = Cast<IRoomInterface>(GetOwner());
+		if (OwnerRoomInterface)
+		{
+			OwnerRoomInterface->DecreaseCount();
+		}
+		
 		Destroy();
 	}
 }

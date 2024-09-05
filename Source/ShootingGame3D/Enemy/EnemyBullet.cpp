@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "../Public/DamagedInterface.h"
 #include "Components/CapsuleComponent.h"
+#include "ShootingGame3D/Player/PlayerCharacter.h"
 
 // Sets default values
 AEnemyBullet::AEnemyBullet()
@@ -54,11 +55,11 @@ void AEnemyBullet::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 	APawn* Player = Cast<APawn>(OtherActor);
 	if (!Player) return;
 
-	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(Player);
+	APlayerCharacter* PlayerCharacter = Cast<APlayerCharacter>(Player);
 
-	if (!PlayerPawn) return;
+	if (!PlayerCharacter) return;
 
-	IDamagedInterface* DamagedInter = Cast<IDamagedInterface>(PlayerPawn);
+	IDamagedInterface* DamagedInter = Cast<IDamagedInterface>(PlayerCharacter);
 
 	if (DamagedInter)
 	{
