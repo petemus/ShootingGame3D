@@ -7,7 +7,6 @@
 #include "StartGameMode.generated.h"
 
 class UStartWidget;
-class UShopWidget;
 
 /**
  * 
@@ -30,11 +29,7 @@ public:
 	UPROPERTY(BlueprintReadWrite , EditAnywhere)
 	TSubclassOf< UStartWidget> StartWidget;
 
-	UPROPERTY(BlueprintReadWrite , EditAnywhere)
-	TSubclassOf< UShopWidget> ShopWidget;
-
 	UStartWidget* StartUI;
-	UShopWidget* ShopUI;
 
 
 
