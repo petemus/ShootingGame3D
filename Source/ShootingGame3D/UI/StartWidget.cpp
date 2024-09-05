@@ -12,23 +12,11 @@ void UStartWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	StartButton->OnClicked.AddDynamic(this, &UStartWidget::Start);
-	ShopButton->OnClicked.AddDynamic(this, &UStartWidget::OpenShop);
 }
 
 void UStartWidget::Start()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), FName("ShootingGameLevel"));
-}
-
-void UStartWidget::OpenShop()
-{
-	if (StartMode == nullptr)
-		return;
-	if (StartMode->ShopUI == nullptr)
-		return;
-	StartMode->ShopUI->AddToViewport();
-	
-	RemoveFromParent();
+	UGameplayStatics::OpenLevel(GetWorld(), FName("MainLevel"));
 }
 
 

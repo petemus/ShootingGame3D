@@ -18,16 +18,7 @@ void AStartGameMode::BeginPlay()
 			StartUI->SetStartMode(this);
 			StartUI->AddToViewport();
 		}
-	}
-	if (ShopWidget != nullptr)
-	{
-		ShopUI = CreateWidget<UShopWidget>(GetWorld(), ShopWidget);
-
-		if (ShopUI != nullptr)
-		{
-			ShopUI->SetStartMode(this);
-		}
-	}
+	}	
 	
 	ShowMouse();
 }

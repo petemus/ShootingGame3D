@@ -54,6 +54,14 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsMove;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float KnockBackTime = 0.f;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float KnockBackMaxTime = 0.8f;
+	
+	FVector KnockBackVec;
 
 protected:
 	/* Damage */
@@ -69,9 +77,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void Move(float DeltaTime);
 
+	UFUNCTION(BlueprintCallable)
+	virtual void KnockBack();
+
 
 	UFUNCTION(BlueprintCallable)
-	void OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp,
+	virtual void OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex,

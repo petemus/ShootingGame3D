@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
-#include "../PlayerPawn.h"
 #include "../ShootingGameLogic/ShootingGameInstance.h"
 #include "TimerManager.h"
 #include "ShootingGame3D/Gimmick/RoomBase.h"
@@ -48,6 +47,10 @@ void AEnemy::Move(float DeltaTime)
 
 }
 
+void AEnemy::KnockBack()
+{
+}
+
 void AEnemy::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && OtherActor != this)
@@ -56,7 +59,7 @@ void AEnemy::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 
 		if (!Player) return;
 
-		APlayerPawn* PlayerPawn =  Cast<APlayerPawn>(Player);
+		APlayerCharacter* PlayerPawn =  Cast<APlayerCharacter>(Player);
 		if (PlayerPawn)
 		{
 			OverlapPlayer = PlayerPawn;
@@ -75,10 +78,8 @@ void AEnemy::OnCapsuleOverlap(UPrimitiveComponent* OverlappedComp, AActor* Other
 void AEnemy::OnCapsuleEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	APawn* Player = Cast<APawn>(OtherActor);
-	UE_LOG(LogTemp, Warning, TEXT("EndOver"));
 	if (Player)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("false, nullptr"));
 		bIsPlayerOverlap = false;
 		OverlapPlayer = nullptr;
 		if (GetWorldTimerManager().IsTimerActive(DamageHandle))
