@@ -347,6 +347,7 @@ void ABossEnemy::UpdateHealth()
 void ABossEnemy::DelayBigCircleColOverlap()
 {
 	BigCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Overlap);
+	SmallCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
 	BigCircle->SetVisibility(false);
 	SmallCircle->SetVisibility(false);
 	// TODO
@@ -393,6 +394,7 @@ void ABossEnemy::SmallCircleNoCol()
 void ABossEnemy::BigCircleNoCol()
 {
 	BigCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
+	SmallCircleCol->SetCollisionResponseToChannel(ECC_GameTraceChannel5, ECR_Ignore);
 }
 
 void ABossEnemy::Idle()

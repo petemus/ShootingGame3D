@@ -75,4 +75,5 @@ public:
 	TArray<float> SplineMeshDistances;
 
 	FTimerHandle TimerHandle;
+	FTimerHandle SmallColTimer;
 };
