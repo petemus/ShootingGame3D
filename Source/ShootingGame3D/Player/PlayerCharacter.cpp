@@ -181,10 +181,17 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 	AddMovementInput(Dir , Scalar);
 	
 	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + Dir);
-	FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
-	GetMesh()->SetWorldRotation(minus);
+	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, rotate.ToString());
+	// 전체르 다 회전하게 되면 카메라도 같이 움직이게 됨 -> Mesh만 회전시킴 
+	//FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
+	
+	//GetMesh()->SetWorldRotation(rotate);
+	SetActorRotation(FRotator(0, rotate.Yaw, 0));
 
-
+	
+	GEngine->AddOnScreenDebugMessage(2, 5.f, FColor::Yellow, (GetMesh()->GetComponentRotation()).ToString());
+	//GetMesh()->SetRelativeRotation(FRotator(0, rotate.Yaw, 0));
+	//GetMesh()->AddRelativeRotation(FRotator(0, rotate.Yaw * GetWorld()->GetDeltaSeconds(), 0));
 	
 }
 
