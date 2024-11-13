@@ -50,79 +50,77 @@ public:
 public:
 	// Components
 	UPROPERTY(EditAnywhere, Category = "Components")
-	UArrowComponent* arrowComp;
+	UArrowComponent* ArrowComp;
 	UPROPERTY(EditAnywhere, Category = "Components")
-	UArrowComponent* leftArrow;
+	UArrowComponent* LeftArrow;
 	UPROPERTY(EditAnywhere, Category = "Components")
-	UArrowComponent* rightArrow;
+	UArrowComponent* RightArrow;
 	UPROPERTY(EditAnywhere, Category = "Components")
-	UArrowComponent* circleArrow;
+	UArrowComponent* CircleArrow;
 
 
-	// IMC, IA
+	// Input
 	UPROPERTY(EditAnywhere, Category = "Input")
-	class UInputMappingContext* imc_playerInput;
-
+	class UInputMappingContext* PlayerInputIMC;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	class UInputAction* ia_move;
-
+	class UInputAction* MoveIA;
 	UPROPERTY(EditAnywhere, Category = "Input")
-	 UInputAction* ia_fire;
+	 UInputAction* FireIA;
 
 	// Bullet Factory
 	// content browser에서의 값을 할당할려면 TSubclassOf
 	// detail 창에서 할당할려면 그냥 클래스 
 	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
-	TSubclassOf<class ABullet> bulletFactory;
+	TSubclassOf<class ABullet> BulletFactory;
 	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
-	TSubclassOf<class ABullet> bigbulletFactory;
+	TSubclassOf<class ABullet> BigBulletFactory;
+
+	// Sound
 	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
-	class USoundBase* bulletSound;
+	class USoundBase* BulletSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Bullet")
-	class USoundBase* bulletBigSound;
+	class USoundBase* BulletBigSound;
 
 public:
-	
+	// 설정 가능한 변수들 
 	UPROPERTY(EditAnywhere, Category = "Setting")
-	float moveSpeed = 500;
+	float MoveSpeed = 500;
 	UPROPERTY(EditAnywhere, Category = "Setting")
 	int32 Health = 6;
 	UPROPERTY(EditAnywhere, Category = "Setting")
-	float spawnTime = 0.5;
+	float SpawnTime = 0.5;
 	UPROPERTY(EditAnywhere, Category = "Setting")
 	int32 AttackStat = 1;
 
 private:
 	// spawn time 
-	float nowTime = spawnTime;
+	float NowTime = SpawnTime;
 	// attack mode 
 	EAttackMode myAttackMode = EAttackMode::NormalAttack;
-	float attackTime = 5;
+	float AttackTime = 5;
 	// Circel Attack의 각도와 시간 변수
-	float rotateAmount = 15;
-	float rotateTime = 0.1f;
+	float RotateAmout = 15;
+	float RotateTime = 0.1f;
 	// circle attack timerhandle
-	FTimerHandle timerHandle;
+	FTimerHandle TimerHandle;
 	
 	// event 변수
 	UPROPERTY()
 	FOnAttackEvent OnAttackEvent;
 
-
-
-private:
 	// 현재 circle arrow의 앵글을 저장할 변수
-	float circleArrowAngle = 0.0f;
+	float CircleArrowAngle = 0.0f;
 
+// Function
 public:
 	// enum은 전방선언 불가
 	void SetAttackMode(EItemType type);
 
 private:
 	// 입력 이벤츠 처리 함수
-	void Move(const struct FInputActionValue& value);
+	void Move(const struct FInputActionValue& Value);
 	// Fire 입력 이벤츠 처리 함수
-	void Fire(const struct FInputActionValue& value);
+	void Fire(const struct FInputActionValue& Value);
 	// 공격 이벤트 발생시 실행할 함수
 	// 이벤트에 바운드 될 함수는 UFUCTION 매크로 필요
 	UFUNCTION()

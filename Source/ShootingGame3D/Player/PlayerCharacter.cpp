@@ -26,15 +26,15 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Components 생성	
-	arrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
-	arrowComp->SetupAttachment(GetMesh());
-	leftArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Left Arrow"));
-	leftArrow->SetupAttachment(GetMesh());
-	rightArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Arrow"));
-	rightArrow->SetupAttachment(GetMesh());
+	ArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow Component"));
+	ArrowComp->SetupAttachment(GetMesh());
+	LeftArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Left Arrow"));
+	LeftArrow->SetupAttachment(GetMesh());
+	RightArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Right Arrow"));
+	RightArrow->SetupAttachment(GetMesh());
 
-	circleArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Circle Arrow"));
-	circleArrow->SetupAttachment(RootComponent);
+	CircleArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Circle Arrow"));
+	CircleArrow->SetupAttachment(RootComponent);
 
 
 	
@@ -62,7 +62,7 @@ void APlayerCharacter::BeginPlay()
 			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pc->GetLocalPlayer());
 		if (subsys != nullptr)
 		{
-			subsys->AddMappingContext(imc_playerInput, 0);
+			subsys->AddMappingContext(PlayerInputIMC, 0);
 		}
 	}
 
@@ -77,7 +77,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// nowTime을 Tick에서 세주어야함 
-	nowTime += GetWorld()->GetDeltaSeconds();
+	NowTime += GetWorld()->GetDeltaSeconds();
 
 }
 
@@ -90,8 +90,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	UEnhancedInputComponent* enhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if (enhancedInputComponent != nullptr)
 	{
-		enhancedInputComponent->BindAction(ia_move, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
-		enhancedInputComponent->BindAction(ia_fire, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
+		enhancedInputComponent->BindAction(MoveIA, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+		enhancedInputComponent->BindAction(FireIA, ETriggerEvent::Triggered, this, &APlayerCharacter::Fire);
 	}
 }
 
@@ -155,36 +155,42 @@ void APlayerCharacter::SetAttackMode(EItemType type)
 	GetWorld()->GetTimerManager().SetTimer(myTimerHandle, FTimerDelegate::CreateLambda([&]()
 		{
 			myAttackMode = EAttackMode::NormalAttack;
-		}), attackTime, false);
+		}), AttackTime, false);
 }
 
-void APlayerCharacter::Move(const FInputActionValue& value)
+void APlayerCharacter::Move(const FInputActionValue& Value)
 {
+	// Input에서 w, s를 x로 두고 a, d를 y로 두었음
+	// 원래는 반대로 많이 하는 것 같음 
+
+	
 	// AddMovementInput(GetActorForwardVector(), MovementVector.Y); 
-	FVector2D moveVec = value.Get<FVector2D>();
+	FVector2D MoveVector = Value.Get<FVector2D>();
 
 	// 방향 벡터 구하기
-	FVector dir = FVector(moveVec.X, moveVec.Y, 0);
-	dir.Normalize();
+	// 이렇게 벡터를 구하면 플레이어의 방향과 상관없이 입력값의 방향만 받기 때문에 플레이어의 이동과는 상관이 없음
+	// -> 이게 제대로 작동할려면 dir의 x, y와 캐릭터의 방향이 일치해야함
+	FVector DirFwd = MoveVector.X * GetActorForwardVector();
+	FVector DirBwd = MoveVector.Y * GetActorRightVector();
 
-	// 등속 이동 
-	//FVector newLocation = GetActorLocation() + dir * moveSpeed * GetWorld()->GetDeltaSeconds();
-	//SetActorLocation(newLocation);
+	FVector Dir = DirFwd + DirBwd;
+	Dir.Normalize();
 
-	float Scalar = moveSpeed * GetWorld()->GetDeltaSeconds();
+	float Scalar = MoveSpeed * GetWorld()->GetDeltaSeconds();
 	// AddMovementInput의 dir은 worldDirection.. 
-	AddMovementInput(dir , Scalar);
+	AddMovementInput(Dir , Scalar);
 	
-	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + dir);
+	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + Dir);
 	FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
 	GetMesh()->SetWorldRotation(minus);
 
+
 	
 }
 
-void APlayerCharacter::Fire(const FInputActionValue& value)
+void APlayerCharacter::Fire(const FInputActionValue& Value)
 {
-	FVector2D vec = value.Get<FVector2D>();
+	FVector2D vec = Value.Get<FVector2D>();
 	FVector dir = FVector(vec.X, vec.Y, 0);
 	dir.Normalize();
 	
@@ -203,31 +209,31 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 	switch (myAttackMode)
 	{
 	case EAttackMode::NormalAttack:
-		if (nowTime >= spawnTime)
+		if (NowTime >= SpawnTime)
 		{
-			GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
-			UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
-			nowTime = 0;
+			GetWorld()->SpawnActor<ABullet>(BulletFactory, ArrowComp->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), BulletSound);
+			NowTime = 0;
 		}
 		break;
 	case EAttackMode::GreatAttack:
-		if (nowTime >= spawnTime)
+		if (NowTime >= SpawnTime)
 		{
-			GetWorld()->SpawnActor<ABullet>(bigbulletFactory, arrowComp->GetComponentTransform());
-			UGameplayStatics::PlaySound2D(GetWorld(), bulletBigSound);
-			nowTime = 0;
+			GetWorld()->SpawnActor<ABullet>(BigBulletFactory, ArrowComp->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), BulletBigSound);
+			NowTime = 0;
 		}
 		break;
 	case EAttackMode::TripleAttack:
-		if (nowTime >= spawnTime)
+		if (NowTime >= SpawnTime)
 		{
-			GetWorld()->SpawnActor<ABullet>(bulletFactory, arrowComp->GetComponentTransform());
-			UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
-			GetWorld()->SpawnActor<ABullet>(bulletFactory, leftArrow->GetComponentTransform());
-			UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
-			GetWorld()->SpawnActor<ABullet>(bulletFactory, rightArrow->GetComponentTransform());
-			UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
-			nowTime = 0;
+			GetWorld()->SpawnActor<ABullet>(BulletFactory, ArrowComp->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), BulletSound);
+			GetWorld()->SpawnActor<ABullet>(BulletFactory, LeftArrow->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), BulletSound);
+			GetWorld()->SpawnActor<ABullet>(BulletFactory, RightArrow->GetComponentTransform());
+			UGameplayStatics::PlaySound2D(GetWorld(), BulletSound);
+			NowTime = 0;
 		}
 		break;
 	default:
@@ -243,23 +249,23 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 	
 	// Timer 호출
 	
-	GetWorld()->GetTimerManager().SetTimer(timerHandle, FTimerDelegate::CreateLambda([&]()
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
 	{
 
-		if(circleArrowAngle >= 360.0f)
+		if(CircleArrowAngle >= 360.0f)
 		{
 			// 한바퀴 다 돌면 timer 종료
-			circleArrowAngle = 0;
-			GetWorld()->GetTimerManager().ClearTimer(timerHandle);
+			CircleArrowAngle = 0;
+			GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 		}
 	
-		GetWorld()->SpawnActor<ABullet>(bulletFactory, circleArrow->GetComponentLocation(), circleArrow->GetComponentRotation());
+		GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
 		//UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 		
 		// circle arrow가 actor의 위치 즉 상대 좌표에서의 0,0,0을 기준으로 이동하면서 회전해야함 
-		FRotator newRotation = circleArrow->GetComponentRotation();
-		newRotation.Yaw += rotateAmount;
-		circleArrow->SetRelativeRotation(newRotation);
+		FRotator newRotation = CircleArrow->GetComponentRotation();
+		newRotation.Yaw += RotateAmout;
+		CircleArrow->SetRelativeRotation(newRotation);
 		/*FRotator newRotation = circlePivot->GetComponentRotation();
 		newRotation.Yaw += rotateAmount;
 		circlePivot->SetRelativeRotation(newRotation);*/
@@ -270,9 +276,9 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
 		//FVector moveLoc = moveDir * 50;
 		//circleArrow->SetWorldLocation(moveLoc + GetActorLocation());
 
-		circleArrowAngle += rotateAmount;
+		CircleArrowAngle += RotateAmout;
 		
-	}),  rotateTime, true);
+	}),  RotateTime, true);
 	
  }
 
@@ -280,11 +286,11 @@ void APlayerCharacter::Fire(const FInputActionValue& value)
  {
 
 
-	GetWorld()->SpawnActor<ABullet>(bulletFactory, circleArrow->GetComponentLocation(), circleArrow->GetComponentRotation());
+	GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
 	
-	FRotator newRotation = circleArrow->GetComponentRotation();
-	newRotation.Yaw += rotateAmount;
-	circleArrow->SetWorldRotation(newRotation);
+	FRotator newRotation = CircleArrow->GetComponentRotation();
+	newRotation.Yaw += RotateAmout;
+	CircleArrow->SetWorldRotation(newRotation);
 		
  }
 
