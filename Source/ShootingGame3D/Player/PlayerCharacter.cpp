@@ -170,6 +170,7 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 	// 방향 벡터 구하기
 	// 이렇게 벡터를 구하면 플레이어의 방향과 상관없이 입력값의 방향만 받기 때문에 플레이어의 이동과는 상관이 없음
 	// -> 이게 제대로 작동할려면 dir의 x, y와 캐릭터의 방향이 일치해야함
+	// Mesh를 이동시키면 Actor의 Forward, right가 고정이므로 문제 없지만 -> Actor를 회전시키면 문제 발생 
 	FVector DirFwd = MoveVector.X * GetActorForwardVector();
 	FVector DirBwd = MoveVector.Y * GetActorRightVector();
 
@@ -187,7 +188,7 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 	
 	//GetMesh()->SetWorldRotation(rotate);
 	SetActorRotation(FRotator(0, rotate.Yaw, 0));
-
+    
 	
 	GEngine->AddOnScreenDebugMessage(2, 5.f, FColor::Yellow, (GetMesh()->GetComponentRotation()).ToString());
 	//GetMesh()->SetRelativeRotation(FRotator(0, rotate.Yaw, 0));
@@ -296,6 +297,8 @@ void APlayerCharacter::Fire(const FInputActionValue& Value)
 	GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
 	
 	FRotator newRotation = CircleArrow->GetComponentRotation();
+	//CircleArrow->GetRelativeLocation();
+	
 	newRotation.Yaw += RotateAmout;
 	CircleArrow->SetWorldRotation(newRotation);
 		
