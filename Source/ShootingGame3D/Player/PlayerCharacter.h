@@ -88,7 +88,8 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Setting")
 	int32 Health = 6;
 	UPROPERTY(EditAnywhere, Category = "Setting")
-	float SpawnTime = 0.5;
+	float SpawnTime = 0.5f;
+	// Default : 0.5
 	UPROPERTY(EditAnywhere, Category = "Setting")
 	int32 AttackStat = 1;
 

@@ -172,25 +172,27 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 	// -> 이게 제대로 작동할려면 dir의 x, y와 캐릭터의 방향이 일치해야함
 	// Mesh를 이동시키면 Actor의 Forward, right가 고정이므로 문제 없지만 -> Actor를 회전시키면 문제 발생 
 	FVector DirFwd = MoveVector.X * GetActorForwardVector();
-	FVector DirBwd = MoveVector.Y * GetActorRightVector();
+	FVector DirRight = MoveVector.Y * GetActorRightVector();
 
-	FVector Dir = DirFwd + DirBwd;
+	FVector Dir = DirFwd + DirRight;
 	Dir.Normalize();
 
 	float Scalar = MoveSpeed * GetWorld()->GetDeltaSeconds();
 	// AddMovementInput의 dir은 worldDirection.. 
 	AddMovementInput(Dir , Scalar);
 	
-	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), GetActorLocation() + Dir);
+	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetMesh()->GetComponentLocation(), GetMesh()->GetComponentLocation() + Dir);
 	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, rotate.ToString());
+	GEngine->AddOnScreenDebugMessage(2, 5.f, FColor::Green, GetMesh()->GetComponentRotation().ToString());
+
 	// 전체르 다 회전하게 되면 카메라도 같이 움직이게 됨 -> Mesh만 회전시킴 
 	//FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
 	
-	//GetMesh()->SetWorldRotation(rotate);
-	SetActorRotation(FRotator(0, rotate.Yaw, 0));
+	GetMesh()->SetWorldRotation(rotate + FRotator(0, -90, 0));
+	//SetActorRotation(FRotator(0, rotate.Yaw, 0));
     
 	
-	GEngine->AddOnScreenDebugMessage(2, 5.f, FColor::Yellow, (GetMesh()->GetComponentRotation()).ToString());
+	//GEngine->AddOnScreenDebugMessage(3, 5.f, FColor::Yellow, (GetMesh()->GetComponentRotation()).ToString());
 	//GetMesh()->SetRelativeRotation(FRotator(0, rotate.Yaw, 0));
 	//GetMesh()->AddRelativeRotation(FRotator(0, rotate.Yaw * GetWorld()->GetDeltaSeconds(), 0));
 	
@@ -199,9 +201,10 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 void APlayerCharacter::Fire(const FInputActionValue& Value)
 {
 	FVector2D vec = Value.Get<FVector2D>();
-	FVector dir = FVector(vec.X, vec.Y, 0);
+	FVector dirX = vec.X * GetActorForwardVector();
+	FVector dirY = vec.Y * GetActorRightVector();
+	FVector dir = dirY + dirX;
 	dir.Normalize();
-	
 
 	// character 회전
 	// mesh를 직접 회전하는 게 아니라 actor를 직접 회전하는 게 더 좋을듯
@@ -256,37 +259,56 @@ void APlayerCharacter::Fire(const FInputActionValue& Value)
 	// Arrow가 한바퀴 돌면 종료
 	
 	// Timer 호출
+	//GetWorld()->GetWorldSettings()->SetTimeDilation(0.2f);
+	CircleArrow->SetRelativeRotation(FRotator(0, 0, 0));
 	
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
 	{
 
-		if(CircleArrowAngle >= 360.0f)
+		if(CircleArrowAngle >= 360.f)
 		{
 			// 한바퀴 다 돌면 timer 종료
 			CircleArrowAngle = 0;
+			GetWorld()->GetWorldSettings()->SetTimeDilation(1.f);
+			CircleArrow->SetRelativeRotation(FRotator(0, 0, 0));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, CircleArrow->GetRelativeRotation().ToString());
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, CircleArrow->GetComponentRotation().ToString());
+
 			GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 		}
 	
-		GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
-		//UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 		
-		// circle arrow가 actor의 위치 즉 상대 좌표에서의 0,0,0을 기준으로 이동하면서 회전해야함 
-		FRotator newRotation = CircleArrow->GetComponentRotation();
+		//UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
+		GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
+
+		//--
+		FRotator newRotation = CircleArrow->GetRelativeRotation();
 		newRotation.Yaw += RotateAmout;
 		CircleArrow->SetRelativeRotation(newRotation);
-		/*FRotator newRotation = circlePivot->GetComponentRotation();
-		newRotation.Yaw += rotateAmount;
-		circlePivot->SetRelativeRotation(newRotation);*/
-		// 이동 
-		
-		//FVector moveDir = circleArrow->GetForwardVector();
-		//moveDir.Normalize();
-		//FVector moveLoc = moveDir * 50;
-		//circleArrow->SetWorldLocation(moveLoc + GetActorLocation());
+		//--
 
+		
+		// circle arrow가 actor의 위치 즉 상대 좌표에서의 0,0,0을 기준으로 이동하면서 회전해야함 
+		// actor의 위치로 이동후 Actor와 Arrow의 거리만큼 Arrow가 바라보는 방향으로 이동
+
+		// X, y축으로만 이동 
+		FVector newArrowLoc = FVector(0, 0, CircleArrow->GetRelativeLocation().Z);
+		
+		// Arrow가 바라보는 방향으로 이동
+		float moveDis = FVector::Dist(CircleArrow->GetRelativeLocation(), newArrowLoc);
+		CircleArrow->SetRelativeLocation(newArrowLoc);
+
+		// CircleArrow의 Forward 벡터로 이동
+		// ForwarVector는 월드 좌표 기준으로 반환
+
+		//CircleArrow->GetForwardVector()
+		CircleArrow->SetRelativeLocation(newArrowLoc + CircleArrow->GetForwardVector() * moveDis);
 		CircleArrowAngle += RotateAmout;
+
+
 		
 	}),  RotateTime, true);
+
 	
  }
 
