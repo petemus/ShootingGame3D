@@ -134,10 +134,10 @@ void APlayerCharacter::SetAttackMode(EItemType type)
 	switch (type)
 	{
 	case EItemType::BlueItem:
-		myAttackMode = EAttackMode::GreatAttack;
+		MyAttackMode = EAttackMode::GreatAttack;
 		break;
 	case EItemType::GreenItem:
-		myAttackMode = EAttackMode::TripleAttack;
+		MyAttackMode = EAttackMode::TripleAttack;
 		break;
 	case EItemType::PurpleItem:
 		// 이벤트 발생
@@ -154,7 +154,7 @@ void APlayerCharacter::SetAttackMode(EItemType type)
 	FTimerHandle myTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(myTimerHandle, FTimerDelegate::CreateLambda([&]()
 		{
-			myAttackMode = EAttackMode::NormalAttack;
+			MyAttackMode = EAttackMode::NormalAttack;
 		}), AttackTime, false);
 }
 
@@ -181,7 +181,8 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 	// AddMovementInput의 dir은 worldDirection.. 
 	AddMovementInput(Dir , Scalar);
 	
-	FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetMesh()->GetComponentLocation(), GetMesh()->GetComponentLocation() + Dir);
+	//FRotator rotate = UKismetMathLibrary::FindLookAtRotation(GetMesh()->GetComponentLocation(), GetMesh()->GetComponentLocation() + Dir);
+	FRotator rotate = Dir.Rotation();
 	GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, rotate.ToString());
 	GEngine->AddOnScreenDebugMessage(2, 5.f, FColor::Green, GetMesh()->GetComponentRotation().ToString());
 
@@ -213,11 +214,9 @@ void APlayerCharacter::Fire(const FInputActionValue& Value)
 	FRotator minus = FRotator(rotate.Pitch, rotate.Yaw  - 90.0f, 0);
 	GetMesh()->SetWorldRotation(minus);
 	
-	// 왜 안돌릴까, arrow comp은 돌아가는 것 같은데
-	/*SetActorRotation(rotate);*/
 	
 	
-	switch (myAttackMode)
+	switch (MyAttackMode)
 	{
 	case EAttackMode::NormalAttack:
 		if (NowTime >= SpawnTime)
@@ -260,7 +259,6 @@ void APlayerCharacter::Fire(const FInputActionValue& Value)
 	
 	// Timer 호출
 	//GetWorld()->GetWorldSettings()->SetTimeDilation(0.2f);
-	CircleArrow->SetRelativeRotation(FRotator(0, 0, 0));
 	
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
 	{
@@ -269,41 +267,32 @@ void APlayerCharacter::Fire(const FInputActionValue& Value)
 		{
 			// 한바퀴 다 돌면 timer 종료
 			CircleArrowAngle = 0;
-			GetWorld()->GetWorldSettings()->SetTimeDilation(1.f);
-			CircleArrow->SetRelativeRotation(FRotator(0, 0, 0));
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, CircleArrow->GetRelativeRotation().ToString());
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Black, CircleArrow->GetComponentRotation().ToString());
+			//GetWorld()->GetWorldSettings()->SetTimeDilation(1.f);
+			//CircleArrow->SetRelativeRotation(FRotator(0, 0, 0));
 
+			// Timer 종료 시켜도 해당 함수의 남은 코드는 계쏙 실해오디는 듯
 			GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+			return;
 		}
-	
-		
-		//UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
-		GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
 
-		//--
-		FRotator newRotation = CircleArrow->GetRelativeRotation();
+		
+
+
+		// 수정 코드 
+		RotateCircle();
+		
+		// 월드로 이동
+		/*FRotator newRotation = CircleArrow->GetComponentRotation();
 		newRotation.Yaw += RotateAmout;
-		CircleArrow->SetRelativeRotation(newRotation);
-		//--
-
+		CircleArrow->SetWorldRotation(newRotation);
 		
-		// circle arrow가 actor의 위치 즉 상대 좌표에서의 0,0,0을 기준으로 이동하면서 회전해야함 
-		// actor의 위치로 이동후 Actor와 Arrow의 거리만큼 Arrow가 바라보는 방향으로 이동
+		FVector newArrowLoc = FVector(GetActorLocation().X, GetActorLocation().Y, CircleArrow->GetComponentLocation().Z);
+				
+		float moveDis = FVector::Dist(CircleArrow->GetComponentLocation(), newArrowLoc);
 
-		// X, y축으로만 이동 
-		FVector newArrowLoc = FVector(0, 0, CircleArrow->GetRelativeLocation().Z);
-		
-		// Arrow가 바라보는 방향으로 이동
-		float moveDis = FVector::Dist(CircleArrow->GetRelativeLocation(), newArrowLoc);
-		CircleArrow->SetRelativeLocation(newArrowLoc);
-
-		// CircleArrow의 Forward 벡터로 이동
-		// ForwarVector는 월드 좌표 기준으로 반환
-
-		//CircleArrow->GetForwardVector()
-		CircleArrow->SetRelativeLocation(newArrowLoc + CircleArrow->GetForwardVector() * moveDis);
-		CircleArrowAngle += RotateAmout;
+		CircleArrow->GetRelativeTransform().GetUnitAxis(EAxis::X);
+		CircleArrow->SetWorldLocation(newArrowLoc + CircleArrow->GetForwardVector() * moveDis);
+		CircleArrowAngle += RotateAmout;*/
 
 
 		
@@ -312,18 +301,30 @@ void APlayerCharacter::Fire(const FInputActionValue& Value)
 	
  }
 
- void APlayerCharacter::RotateCircleArrow()
+ void APlayerCharacter::RotateCircle()
  {
 
-
-	GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
-	
-	FRotator newRotation = CircleArrow->GetComponentRotation();
-	//CircleArrow->GetRelativeLocation();
-	
+	/*GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
+	FRotator newRotation = CircleArrow->GetRelativeRotation();
 	newRotation.Yaw += RotateAmout;
-	CircleArrow->SetWorldRotation(newRotation);
+	CircleArrow->SetRelativeRotation(newRotation);
+	CircleArrowAngle += RotateAmout;*/
+	
+	// Arrow Component 회전
+	CircleArrow->AddLocalRotation(FRotator(0, RotateAmout, 0));
+	
+	// circle arrow를 pivot을 기준으로 회전 
+	FVector pivot = FVector(0, 0, CircleArrow->GetRelativeLocation().Z);
 		
+	// Arrow가 바라보는 방향으로 이동(Arrow의 Local Space)
+	float moveDis = FVector::Dist(CircleArrow->GetRelativeLocation(), pivot);
+
+	// CircleArrow의 Forward 벡터로 이동 (Local Space의 Forward vector)
+	CircleArrow->SetRelativeLocation(pivot + CircleArrow->GetRelativeTransform().GetUnitAxis(EAxis::X) * moveDis);
+	CircleArrowAngle += RotateAmout;
+
+	// Spawn
+	GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
  }
 
 

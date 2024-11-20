@@ -97,11 +97,11 @@ private:
 	// spawn time 
 	float NowTime = SpawnTime;
 	// attack mode 
-	EAttackMode myAttackMode = EAttackMode::NormalAttack;
+	EAttackMode MyAttackMode = EAttackMode::NormalAttack;
 	float AttackTime = 5;
 	// Circel Attack의 각도와 시간 변수
 	float RotateAmout = 15;
-	float RotateTime = 0.1f;
+	float RotateTime = 0.05f;
 	// circle attack timerhandle
 	FTimerHandle TimerHandle;
 	
@@ -127,7 +127,7 @@ private:
 	UFUNCTION()
 	void AttackCircle();
 	// 공격 이벤트에서 timer로 계속 반복하는 rotate 함수
-	void RotateCircleArrow();
+	void RotateCircle();
 
 	// void Knock-Back
 	void KnockBack(AActor* OtherActor);
