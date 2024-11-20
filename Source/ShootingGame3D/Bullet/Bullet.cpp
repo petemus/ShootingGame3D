@@ -28,6 +28,33 @@ ABullet::ABullet()
 	sphereComp->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnSphereOverlap);
 }
 
+ABullet::ABullet(ABullet&& Other)
+{
+	Direction = MoveTemp(Other.Direction);
+	bIsActive = Other.bIsActive;
+	Other.bIsActive = false; 
+}
+
+ABullet& ABullet::operator=(ABullet&& Other)
+{
+	if (this != &Other)
+	{
+		Direction = MoveTemp(Other.Direction);
+		bIsActive = Other.bIsActive;
+		Other.bIsActive = false;
+	}
+	return *this;
+}
+
+void ABullet::Deactivate()
+{
+}
+
+bool ABullet::IsActive()
+{
+	return false;
+}
+
 void ABullet::Move(float DeltaTime)
 {
 	// 앞으로 이동 

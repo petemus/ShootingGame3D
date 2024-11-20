@@ -46,6 +46,11 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+// Bullet Pool을 위한 임시
+public:
+	//
+    class ABulletPool* BulletPool;
+	void FireBullet();
 	
 public:
 	// Components
@@ -116,6 +121,8 @@ private:
 public:
 	// enum은 전방선언 불가
 	void SetAttackMode(EItemType type);
+
+
 
 private:
 	// 입력 이벤츠 처리 함수

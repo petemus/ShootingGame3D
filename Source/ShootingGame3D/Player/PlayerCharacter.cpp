@@ -95,7 +95,11 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	}
 }
 
-void APlayerCharacter::KnockBack(AActor* OtherActor)
+ void APlayerCharacter::FireBullet()
+ {
+ }
+
+ void APlayerCharacter::KnockBack(AActor* OtherActor)
 {
 	// 실제로는 SetDamaged()에서 호출하면 other actor에 대한 정보를 얻을 수 없으므로
 	// OnOverlapEvent에 하거나 아니면 SetDamage에서 actor에 대한 정보를 얻어야함
@@ -303,12 +307,12 @@ void APlayerCharacter::Fire(const FInputActionValue& Value)
 
  void APlayerCharacter::RotateCircle()
  {
-
 	/*GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
 	FRotator newRotation = CircleArrow->GetRelativeRotation();
 	newRotation.Yaw += RotateAmout;
 	CircleArrow->SetRelativeRotation(newRotation);
 	CircleArrowAngle += RotateAmout;*/
+
 	
 	// Arrow Component 회전
 	CircleArrow->AddLocalRotation(FRotator(0, RotateAmout, 0));
@@ -323,7 +327,8 @@ void APlayerCharacter::Fire(const FInputActionValue& Value)
 	CircleArrow->SetRelativeLocation(pivot + CircleArrow->GetRelativeTransform().GetUnitAxis(EAxis::X) * moveDis);
 	CircleArrowAngle += RotateAmout;
 
-	// Spawn
+	// Bullet Pool에서 가져오기
+	//FireBullet();
 	GetWorld()->SpawnActor<ABullet>(BulletFactory, CircleArrow->GetComponentLocation(), CircleArrow->GetComponentRotation());
  }
 

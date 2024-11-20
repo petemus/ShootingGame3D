@@ -15,6 +15,21 @@ public:
 	// Sets default values for this actor's properties
 	ABullet();
 
+// Move semantics 사용
+public:
+	// Move Constructor
+	ABullet(ABullet&& Other);
+	// Move Assignment Operator
+	ABullet& operator=(ABullet&& Other);
+	void Deactivate();
+	bool IsActive();
+
+	// object pooling 을 위한 변수
+private:
+	FVector Direction;
+	bool bIsActive;
+	
+
 public:
 	// Components
 	UPROPERTY(EditAnywhere)
